@@ -1,4 +1,5 @@
-import { Metadata } from "next"
+"use client"
+import { useEffect } from "react"
 import { Header } from "@/components/header"
 import { Hero } from "@/components/hero"
 import { Servicios } from "@/components/servicios"
@@ -7,28 +8,20 @@ import { Sobre } from "@/components/sobre"
 import { Contacto } from "@/components/contacto"
 import { Footer } from "@/components/footer"
 
-export const metadata: Metadata = {
-  title: "GL Agrimensura | Agrimensor La Plata - Ing. Gabriel Lucero",
-  description: "Servicios profesionales de agrimensura en La Plata: mensuras urbanas y rurales, usucapión, subdivisión, propiedad horizontal, topografía GPS y amojonamientos. Tecnología de última generación.",
-  keywords: [
-    'agrimensor la plata',
-    'mensuras la plata',
-    'usucapion la plata',
-    'subdivision terrenos',
-    'propiedad horizontal',
-    'topografia gps',
-    'amojonamientos',
-    'gabriel lucero agrimensor',
-    'agrimensura la plata'
-  ],
-  openGraph: {
-    title: "GL Agrimensura | Agrimensor La Plata",
-    description: "Servicios profesionales de agrimensura con tecnología GPS de última generación",
-    type: "website",
-  },
-}
-
 export default function Home() {
+  // Manejar scroll cuando hay hash en la URL
+  useEffect(() => {
+    const hash = window.location.hash.substring(1)
+    if (hash) {
+      setTimeout(() => {
+        const element = document.getElementById(hash)
+        if (element) {
+          element.scrollIntoView({ behavior: "smooth" })
+        }
+      }, 100)
+    }
+  }, [])
+
   return (
     <main className="min-h-screen bg-background">
       <Header />

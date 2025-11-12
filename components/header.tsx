@@ -2,20 +2,30 @@
 import { Button } from "@/components/ui/button"
 import { Phone } from "lucide-react"
 import Link from "next/link"
-import { usePathname } from "next/navigation"
+import { usePathname, useRouter } from "next/navigation"
 
 export function Header() {
   const pathname = usePathname()
+  const router = useRouter()
   const isHome = pathname === '/'
 
   const handleNavigation = (section: string) => {
     if (isHome) {
       // Si estamos en home, scroll directo
       const element = document.getElementById(section)
-      element?.scrollIntoView({ behavior: "smooth" })
+      if (element) {
+        element.scrollIntoView({ behavior: "smooth" })
+      }
     } else {
       // Si estamos en otra página, ir a home con hash
-      window.location.href = `/#${section}`
+      router.push(`/#${section}`)
+      // Después de navegar, hacer scroll
+      setTimeout(() => {
+        const element = document.getElementById(section)
+        if (element) {
+          element.scrollIntoView({ behavior: "smooth" })
+        }
+      }, 100)
     }
   }
 
