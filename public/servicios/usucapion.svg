@@ -1,0 +1,19 @@
+<!-- Placeholder para Usucapión -->
+<svg width="1200" height="800" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="grad2" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#11998e;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#38ef7d;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="800" fill="url(#grad2)"/>
+  <text x="50%" y="40%" font-family="Arial, sans-serif" font-size="72" fill="white" text-anchor="middle" font-weight="bold">
+    Usucapión
+  </text>
+  <text x="50%" y="50%" font-family="Arial, sans-serif" font-size="36" fill="white" text-anchor="middle" opacity="0.9">
+    Escriturá tu Propiedad
+  </text>
+  <text x="50%" y="60%" font-family="Arial, sans-serif" font-size="24" fill="white" text-anchor="middle" opacity="0.7">
+    📄 Planos de Mensura | ⚖️ Trámites Legales | 🏠 Regularización
+  </text>
+</svg>

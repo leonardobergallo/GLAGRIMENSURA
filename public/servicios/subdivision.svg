@@ -1,0 +1,19 @@
+<!-- Placeholder para Subdivisión -->
+<svg width="1200" height="800" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="grad3" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#eb3349;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#f45c43;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="800" fill="url(#grad3)"/>
+  <text x="50%" y="40%" font-family="Arial, sans-serif" font-size="72" fill="white" text-anchor="middle" font-weight="bold">
+    Subdivisión de Lotes
+  </text>
+  <text x="50%" y="50%" font-family="Arial, sans-serif" font-size="36" fill="white" text-anchor="middle" opacity="0.9">
+    Dividí tu Terreno
+  </text>
+  <text x="50%" y="60%" font-family="Arial, sans-serif" font-size="24" fill="white" text-anchor="middle" opacity="0.7">
+    📏 Planos Aprobados | 🏗️ Nuevas Partidas | ✅ Trámites Completos
+  </text>
+</svg>
