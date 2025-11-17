@@ -27,6 +27,17 @@ export const ourFileRouter = {
       console.log("Imagen de galería subida:", file.url);
       return { url: file.url };
     }),
+
+  // Endpoint para documentos de consultas (PDFs, documentos Word e imágenes)
+  consultaDocumentos: f({ 
+    pdf: { maxFileSize: "16MB", maxFileCount: 1 },
+    image: { maxFileSize: "8MB", maxFileCount: 1 },
+    blob: { maxFileSize: "10MB", maxFileCount: 1 }
+  })
+    .onUploadComplete(async ({ file }) => {
+      console.log("Documento de consulta subido:", file.url);
+      return { url: file.url };
+    }),
 } satisfies FileRouter;
 
 export type OurFileRouter = typeof ourFileRouter;

@@ -93,7 +93,7 @@ export function Header() {
           </a>
           <Button 
             onClick={() => {
-              const whatsappUrl = `https://wa.me/5492214000000?text=${encodeURIComponent('Hola, necesito información sobre servicios de agrimensura')}`
+              const whatsappUrl = `https://wa.me/5492212230052?text=${encodeURIComponent('Hola, necesito información sobre servicios de agrimensura')}`
               window.open(whatsappUrl, '_blank')
             }}
             className="bg-[#25D366] hover:bg-[#20BA5A] text-white font-semibold"
@@ -120,7 +120,7 @@ export function Header() {
           </Button>
           <Button 
             onClick={() => {
-              const whatsappUrl = `https://wa.me/5492214000000?text=${encodeURIComponent('Hola, necesito información sobre servicios de agrimensura')}`
+              const whatsappUrl = `https://wa.me/5492212230052?text=${encodeURIComponent('Hola, necesito información sobre servicios de agrimensura')}`
               window.open(whatsappUrl, '_blank')
             }}
             size="sm"

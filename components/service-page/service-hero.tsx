@@ -19,7 +19,7 @@ export function ServiceHero({
   description,
   imagen,
   whatsappMessage,
-  phoneNumber = '5492214000000' // CAMBIAR POR EL NÚMERO REAL
+  phoneNumber = '5492212230052'
 }: ServiceHeroProps) {
   const handleWhatsApp = () => {
     const encodedMessage = encodeURIComponent(whatsappMessage)

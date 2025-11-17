@@ -22,7 +22,7 @@ export async function POST(request: NextRequest) {
 
   try {
     const body = await request.json()
-    const { nombre, email, telefono, servicio, title, ...campos } = body
+    const { nombre, email, telefono, servicio, title, documentoUrl, documentoNombre, ...campos } = body
 
     // Construir el HTML del email
     const htmlContent = `
@@ -59,7 +59,7 @@ export async function POST(request: NextRequest) {
                 <span class="value">${telefono}</span>
               </div>
               ${Object.entries(campos)
-                .filter(([key, value]) => value && key !== 'mensaje')
+                .filter(([key, value]) => value && key !== 'mensaje' && key !== 'documentoUrl' && key !== 'documentoNombre')
                 .map(([key, value]) => `
                   <div class="field">
                     <span class="label">${formatLabel(key)}:</span>
@@ -71,6 +71,18 @@ export async function POST(request: NextRequest) {
                 <div class="field">
                   <span class="label">💬 Mensaje:</span>
                   <div class="value" style="white-space: pre-wrap;">${campos.mensaje}</div>
+                </div>
+              ` : ''}
+              ${documentoUrl ? `
+                <div class="field" style="background: #e8f5e9; border-left: 4px solid #4caf50;">
+                  <span class="label">📎 Documento adjunto:</span>
+                  <div class="value">
+                    <a href="${documentoUrl}" target="_blank" style="color: #4caf50; text-decoration: none; font-weight: bold;">
+                      ${documentoNombre || 'Ver documento'} →
+                    </a>
+                    <br>
+                    <span style="font-size: 12px; color: #666;">${documentoUrl}</span>
+                  </div>
                 </div>
               ` : ''}
             </div>
@@ -120,7 +132,7 @@ export async function POST(request: NextRequest) {
                 <p>Recibimos tu consulta sobre <strong>${title}</strong>.</p>
                 <p>Nos pondremos en contacto contigo a la brevedad para brindarte toda la información que necesitás.</p>
                 <div class="cta">
-                  <a href="https://wa.me/5492214000000" class="button">📱 Chateá con nosotros</a>
+                  <a href="https://wa.me/5492212230052" class="button">📱 Chateá con nosotros</a>
                 </div>
                 <p>Saludos cordiales,<br><strong>Ing. Gabriel Lucero</strong><br>GL Agrimensura</p>
               </div>

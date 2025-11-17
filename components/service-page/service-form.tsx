@@ -9,8 +9,9 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { Label } from '@/components/ui/label'
-import { MessageCircle, Mail, Loader2, CheckCircle } from 'lucide-react'
+import { MessageCircle, Mail, Loader2, CheckCircle, FileText, X } from 'lucide-react'
 import { ServicioSlug } from '@/lib/servicios-data'
+import { UploadButton } from '@/lib/uploadthing'
 
 const baseSchema = z.object({
   nombre: z.string().min(2, 'El nombre es muy corto'),
@@ -60,9 +61,11 @@ interface ServiceFormProps {
   phoneNumber?: string
 }
 
-export function ServiceForm({ servicio, title, phoneNumber = '5492214000000' }: ServiceFormProps) {
+export function ServiceForm({ servicio, title, phoneNumber = '5492212230052' }: ServiceFormProps) {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isSuccess, setIsSuccess] = useState(false)
+  const [documentoUrl, setDocumentoUrl] = useState<string>('')
+  const [documentoNombre, setDocumentoNombre] = useState<string>('')
 
   const form = useForm({
     resolver: zodResolver(schemas[servicio]),
@@ -75,11 +78,18 @@ export function ServiceForm({ servicio, title, phoneNumber = '5492214000000' }: 
   })
 
   const handleWhatsAppSubmit = (data: any) => {
-    const mensaje = formatWhatsAppMessage(data, servicio, title)
+    const mensaje = formatWhatsAppMessage(data, servicio, title, documentoUrl)
     const encodedMessage = encodeURIComponent(mensaje)
     const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodedMessage}`
     window.open(whatsappUrl, '_blank')
     setIsSuccess(true)
+    // Resetear formulario después de un momento
+    setTimeout(() => {
+      form.reset()
+      setDocumentoUrl('')
+      setDocumentoNombre('')
+      setIsSuccess(false)
+    }, 3000)
   }
 
   const handleEmailSubmit = async (data: any) => {
@@ -88,12 +98,14 @@ export function ServiceForm({ servicio, title, phoneNumber = '5492214000000' }: 
       const response = await fetch('/api/contact', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...data, servicio, title }),
+        body: JSON.stringify({ ...data, servicio, title, documentoUrl, documentoNombre }),
       })
       
       if (response.ok) {
         setIsSuccess(true)
         form.reset()
+        setDocumentoUrl('')
+        setDocumentoNombre('')
       }
     } catch (error) {
       console.error('Error:', error)
@@ -185,6 +197,52 @@ export function ServiceForm({ servicio, title, phoneNumber = '5492214000000' }: 
                   placeholder="Contanos más detalles sobre tu consulta..."
                   rows={4}
                 />
+              </div>
+
+              {/* Subida de documento */}
+              <div>
+                <Label htmlFor="documento">Documento adjunto (opcional)</Label>
+                <p className="text-sm text-muted-foreground mb-2">
+                  Podés subir un PDF, documento o imagen relacionada con tu consulta
+                </p>
+                {!documentoUrl ? (
+                  <div className="border-2 border-dashed border-gray-300 rounded-lg p-4">
+                    <UploadButton
+                      endpoint="consultaDocumentos"
+                      onClientUploadComplete={(res: any) => {
+                        if (res?.[0]?.url) {
+                          setDocumentoUrl(res[0].url)
+                          setDocumentoNombre(res[0].name || 'Documento adjunto')
+                        }
+                      }}
+                      onUploadError={(error: Error) => {
+                        alert(`Error al subir el documento: ${error.message}`)
+                      }}
+                    />
+                  </div>
+                ) : (
+                  <div className="flex items-center justify-between p-3 bg-green-50 border border-green-200 rounded-lg">
+                    <div className="flex items-center gap-2">
+                      <FileText className="h-5 w-5 text-green-600" />
+                      <div>
+                        <p className="text-sm font-medium text-green-900">{documentoNombre}</p>
+                        <p className="text-xs text-green-600 truncate max-w-xs">{documentoUrl}</p>
+                      </div>
+                    </div>
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => {
+                        setDocumentoUrl('')
+                        setDocumentoNombre('')
+                      }}
+                      className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                    >
+                      <X className="h-4 w-4" />
+                    </Button>
+                  </div>
+                )}
               </div>
 
               {/* Botones de envío */}
@@ -355,7 +413,7 @@ function renderSpecificFields(servicio: ServicioSlug, form: any) {
   }
 }
 
-function formatWhatsAppMessage(data: any, servicio: ServicioSlug, title: string): string {
+function formatWhatsAppMessage(data: any, servicio: ServicioSlug, title: string, documentoUrl?: string): string {
   let mensaje = `*Consulta: ${title}*\n\n`
   mensaje += `👤 *Nombre:* ${data.nombre}\n`
   mensaje += `📧 *Email:* ${data.email}\n`
@@ -375,6 +433,10 @@ function formatWhatsAppMessage(data: any, servicio: ServicioSlug, title: string)
   if (data.cantidadMojones) mensaje += `📍 *Cantidad de mojones:* ${data.cantidadMojones}\n`
 
   if (data.mensaje) mensaje += `\n💬 *Mensaje:*\n${data.mensaje}`
+
+  if (documentoUrl) {
+    mensaje += `\n\n📎 *Documento adjunto:*\n${documentoUrl}`
+  }
 
   return mensaje
 }
