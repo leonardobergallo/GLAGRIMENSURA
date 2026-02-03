@@ -12,7 +12,7 @@
 - `/servicios/topografia` ✅
 - `/servicios/amojonamientos` ✅
 
-bababab
+babababasdas
 
 ✅ **Fondo con imagen específica** - Implementado en `ServiceHero` con imagen de fondo
 ⚠️ **PERO**: Actualmente usa SVG (`/servicios/mensura.svg`) - **FALTA reemplazar por fotos reales**
