@@ -41,7 +41,7 @@ export function ServicePhotosGallery({ servicio }: { servicio: string }) {
     return (
       <section className="py-16 bg-gray-50">
         <div className="max-w-6xl mx-auto px-4">
-          <h2 className="text-3xl font-bold text-center mb-12">Galería de Trabajos</h2>
+          <h2 className="text-3xl font-bold text-center mb-12 font-heading">Galería de Trabajos</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {[1, 2, 3].map((i) => (
               <Skeleton key={i} className="h-64 w-full rounded-lg" />
@@ -59,7 +59,7 @@ export function ServicePhotosGallery({ servicio }: { servicio: string }) {
   return (
     <section className="py-16 bg-gray-50">
       <div className="max-w-6xl mx-auto px-4">
-        <h2 className="text-3xl font-bold text-center mb-4">Galería de Trabajos</h2>
+        <h2 className="text-3xl font-bold text-center mb-4 font-heading">Galería de Trabajos</h2>
         <p className="text-center text-muted-foreground mb-12">
           Ejemplos de trabajos realizados
         </p>

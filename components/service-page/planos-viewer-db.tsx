@@ -43,7 +43,7 @@ export function PlanosViewerDB({ servicio }: { servicio: string }) {
     return (
       <section className="py-16 bg-secondary/20">
         <div className="max-w-6xl mx-auto px-4">
-          <h2 className="text-3xl font-bold text-center mb-12">Ejemplos de Trabajos</h2>
+          <h2 className="text-3xl font-bold text-center mb-12 font-heading">Ejemplos de Trabajos</h2>
           <div className="grid md:grid-cols-3 gap-6">
             {[1, 2, 3].map((i) => (
               <Skeleton key={i} className="h-96 w-full rounded-lg" />
@@ -59,7 +59,7 @@ export function PlanosViewerDB({ servicio }: { servicio: string }) {
       <section className="py-16 bg-secondary/20">
         <div className="max-w-6xl mx-auto px-4 text-center">
           <FileText className="h-16 w-16 mx-auto mb-4 text-muted-foreground" />
-          <h2 className="text-2xl font-bold mb-2">Planos de referencia</h2>
+          <h2 className="text-2xl font-bold mb-2 font-heading">Planos de referencia</h2>
           <p className="text-muted-foreground">
             Próximamente compartiremos ejemplos de trabajos realizados
           </p>
@@ -72,7 +72,7 @@ export function PlanosViewerDB({ servicio }: { servicio: string }) {
     <>
       <section className="py-16 bg-secondary/20">
         <div className="max-w-6xl mx-auto px-4">
-          <h2 className="text-3xl md:text-4xl font-bold text-center mb-4">
+          <h2 className="text-3xl md:text-4xl font-bold text-center mb-4 font-heading">
             Ejemplos de Trabajos Realizados
           </h2>
           <p className="text-center text-muted-foreground mb-12 max-w-2xl mx-auto">

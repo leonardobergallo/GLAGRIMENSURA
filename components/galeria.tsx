@@ -1,15 +1,15 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect, useCallback } from "react"
 import Image from "next/image"
-import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
+import { ChevronLeft, ChevronRight } from "lucide-react"
 
 const categorias = [
   { id: 'todos', label: 'Todos' },
   { id: 'urbano', label: 'Urbano' },
   { id: 'rural', label: 'Rural' },
-  { id: 'ph', label: 'Propiedad Horizontal' },
   { id: 'gps', label: 'GPS/Topografía' },
   { id: 'equipos', label: 'Equipos' },
 ]
@@ -61,63 +61,171 @@ const galeria = [
 
 export function Galeria() {
   const [categoriaActiva, setCategoriaActiva] = useState('todos')
+  const [currentIndex, setCurrentIndex] = useState(0)
+  const [isAutoPlaying, setIsAutoPlaying] = useState(true)
 
   const imagenesFiltradas = categoriaActiva === 'todos' 
     ? galeria 
     : galeria.filter(img => img.categoria === categoriaActiva)
 
+  // Reset index when category changes
+  useEffect(() => {
+    setCurrentIndex(0)
+  }, [categoriaActiva])
+
+  const nextSlide = useCallback(() => {
+    if (imagenesFiltradas.length === 0) return
+    setCurrentIndex((prev) => (prev + 1) % imagenesFiltradas.length)
+  }, [imagenesFiltradas.length])
+
+  const prevSlide = useCallback(() => {
+    if (imagenesFiltradas.length === 0) return
+    setCurrentIndex((prev) => (prev - 1 + imagenesFiltradas.length) % imagenesFiltradas.length)
+  }, [imagenesFiltradas.length])
+
+  // Autoplay
+  useEffect(() => {
+    if (!isAutoPlaying || imagenesFiltradas.length === 0) return
+    const interval = setInterval(nextSlide, 4000)
+    return () => clearInterval(interval)
+  }, [isAutoPlaying, nextSlide, imagenesFiltradas.length])
+
+  // Get visible indices for carousel (show 3 on desktop)
+  const getVisibleIndices = () => {
+    if (imagenesFiltradas.length === 0) return []
+    if (imagenesFiltradas.length === 1) return [0]
+    if (imagenesFiltradas.length === 2) return [0, 1]
+    
+    const indices = []
+    for (let i = -1; i <= 1; i++) {
+      indices.push((currentIndex + i + imagenesFiltradas.length) % imagenesFiltradas.length)
+    }
+    return indices
+  }
+
+  const visibleIndices = getVisibleIndices()
+
   return (
-    <section id="galeria" className="py-24 bg-secondary/30">
-      <div className="max-w-6xl mx-auto px-4">
-        <div className="text-center mb-12">
-          <h2 className="text-4xl font-bold text-primary mb-4">Galería de Trabajos</h2>
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+    <section id="galeria" className="py-24 bg-gray-900 overflow-hidden">
+      {/* Patrón de curvas de nivel sutil */}
+      <div className="absolute inset-0 opacity-5 pointer-events-none">
+        <svg className="w-full h-full" viewBox="0 0 1000 400" preserveAspectRatio="xMidYMid slice">
+          <path d="M0,100 C200,50 400,150 600,100 S800,50 1000,100" fill="none" stroke="white" strokeWidth="1"/>
+          <path d="M0,200 C200,150 400,250 600,200 S800,150 1000,200" fill="none" stroke="white" strokeWidth="1"/>
+          <path d="M0,300 C200,250 400,350 600,300 S800,250 1000,300" fill="none" stroke="white" strokeWidth="1"/>
+        </svg>
+      </div>
+      
+      <div className="max-w-7xl mx-auto px-4">
+        <div className="text-center mb-8">
+          <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">Nuestros Trabajos</h2>
+          <p className="text-lg text-gray-400 max-w-2xl mx-auto">
             Proyectos realizados con precisión y profesionalismo
           </p>
         </div>
 
         {/* Filtros por categoría */}
-        <div className="flex flex-wrap justify-center gap-3 mb-12">
+        <div className="flex flex-wrap justify-center gap-3 mb-10">
           {categorias.map(cat => (
             <Button
               key={cat.id}
               variant={categoriaActiva === cat.id ? "default" : "outline"}
               onClick={() => setCategoriaActiva(cat.id)}
-              className="rounded-full"
+              className={`rounded-full transition-all ${
+                categoriaActiva === cat.id 
+                  ? 'bg-amber-500 hover:bg-amber-600 text-black border-amber-500' 
+                  : 'bg-transparent border-gray-600 text-gray-300 hover:border-amber-500 hover:text-amber-500'
+              }`}
             >
               {cat.label}
             </Button>
           ))}
         </div>
 
-        {/* Grid de imágenes con lazy loading */}
-        <div className="grid md:grid-cols-3 gap-6">
-          {imagenesFiltradas.map((item) => (
-            <div
-              key={item.id}
-              className="group relative overflow-hidden rounded-xl border-2 border-primary/20 hover:border-primary/50 transition-all h-64"
+        {/* Carrusel */}
+        {imagenesFiltradas.length > 0 ? (
+          <div 
+            className="relative"
+            onMouseEnter={() => setIsAutoPlaying(false)}
+            onMouseLeave={() => setIsAutoPlaying(true)}
+          >
+            {/* Botón anterior */}
+            <button
+              onClick={prevSlide}
+              className="absolute left-2 md:left-4 top-1/2 -translate-y-1/2 z-10 w-12 h-12 bg-black/50 hover:bg-amber-500 backdrop-blur-sm rounded-full flex items-center justify-center text-white transition-all"
+              aria-label="Anterior"
             >
-              <Image
-                src={item.src || "/placeholder.svg"}
-                alt={item.alt}
-                fill
-                loading="lazy"
-                className="object-cover group-hover:scale-105 transition-transform duration-300"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity">
-                <div className="absolute bottom-4 left-4 right-4">
-                  <Badge variant="secondary" className="mb-2">
-                    {item.etiqueta}
-                  </Badge>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
+              <ChevronLeft size={28} />
+            </button>
 
-        {imagenesFiltradas.length === 0 && (
+            {/* Contenedor del carrusel - más ancho */}
+            <div className="flex gap-4 md:gap-6 justify-center items-center px-16 md:px-20">
+              {visibleIndices.map((index, i) => {
+                const item = imagenesFiltradas[index]
+                const isCenter = visibleIndices.length === 1 || i === 1 || (visibleIndices.length === 2 && i === 0)
+                
+                return (
+                  <div
+                    key={`${item.id}-${i}`}
+                    className={`relative overflow-hidden rounded-xl transition-all duration-500 ${
+                      isCenter 
+                        ? 'w-full md:w-[550px] lg:w-[650px] h-[280px] md:h-[400px] lg:h-[450px] scale-100 opacity-100' 
+                        : 'hidden md:block w-[280px] lg:w-[320px] h-[320px] lg:h-[380px] scale-95 opacity-50'
+                    }`}
+                  >
+                    <Image
+                      src={item.src || "/placeholder.svg"}
+                      alt={item.alt}
+                      fill
+                      className="object-cover"
+                      priority={isCenter}
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent">
+                      <div className="absolute bottom-4 left-4 right-4">
+                        <Badge 
+                          className={`bg-amber-500 text-black font-semibold ${
+                            isCenter ? 'text-sm px-3 py-1' : 'text-xs'
+                          }`}
+                        >
+                          {item.etiqueta}
+                        </Badge>
+                      </div>
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
+
+            {/* Botón siguiente */}
+            <button
+              onClick={nextSlide}
+              className="absolute right-2 md:right-4 top-1/2 -translate-y-1/2 z-10 w-12 h-12 bg-black/50 hover:bg-amber-500 backdrop-blur-sm rounded-full flex items-center justify-center text-white transition-all"
+              aria-label="Siguiente"
+            >
+              <ChevronRight size={28} />
+            </button>
+          </div>
+        ) : (
           <div className="text-center py-12">
-            <p className="text-muted-foreground">No hay imágenes en esta categoría</p>
+            <p className="text-gray-400">No hay imágenes en esta categoría</p>
+          </div>
+        )}
+
+        {/* Indicadores */}
+        {imagenesFiltradas.length > 0 && (
+          <div className="flex justify-center gap-2 mt-8">
+            {imagenesFiltradas.map((_, index) => (
+              <button
+                key={index}
+                onClick={() => setCurrentIndex(index)}
+                className={`h-2 rounded-full transition-all ${
+                  index === currentIndex 
+                    ? 'bg-amber-500 w-8' 
+                    : 'bg-white/30 hover:bg-white/50 w-2'
+                }`}
+                aria-label={`Ir a imagen ${index + 1}`}
+              />
+            ))}
           </div>
         )}
       </div>

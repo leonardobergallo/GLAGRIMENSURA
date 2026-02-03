@@ -66,6 +66,7 @@ export function ServiceForm({ servicio, title, phoneNumber = '5492212230052' }: 
   const [isSuccess, setIsSuccess] = useState(false)
   const [documentoUrl, setDocumentoUrl] = useState<string>('')
   const [documentoNombre, setDocumentoNombre] = useState<string>('')
+  const [mostrarAdjunto, setMostrarAdjunto] = useState(false)
 
   const form = useForm({
     resolver: zodResolver(schemas[servicio]),
@@ -133,7 +134,7 @@ export function ServiceForm({ servicio, title, phoneNumber = '5492212230052' }: 
       <div className="max-w-2xl mx-auto px-4">
         <Card>
           <CardHeader>
-            <CardTitle className="text-2xl">Solicitá tu presupuesto</CardTitle>
+            <CardTitle className="text-2xl font-heading">Solicitá tu presupuesto</CardTitle>
             <CardDescription>
               Completá el formulario y te contactaremos a la brevedad
             </CardDescription>
@@ -199,75 +200,91 @@ export function ServiceForm({ servicio, title, phoneNumber = '5492212230052' }: 
                 />
               </div>
 
-              {/* Subida de documento */}
-              <div>
-                <Label htmlFor="documento">Documento adjunto (opcional)</Label>
-                <p className="text-sm text-muted-foreground mb-2">
-                  Podés subir un PDF, documento o imagen relacionada con tu consulta
-                </p>
-                {!documentoUrl ? (
-                  <div className="border-2 border-dashed border-gray-300 rounded-lg p-4">
-                    <UploadButton
-                      endpoint="consultaDocumentos"
-                      onClientUploadComplete={(res: any) => {
-                        if (res?.[0]?.url) {
-                          setDocumentoUrl(res[0].url)
-                          setDocumentoNombre(res[0].name || 'Documento adjunto')
-                        }
-                      }}
-                      onUploadError={(error: Error) => {
-                        alert(`Error al subir el documento: ${error.message}`)
-                      }}
-                    />
-                  </div>
-                ) : (
-                  <div className="flex items-center justify-between p-3 bg-green-50 border border-green-200 rounded-lg">
-                    <div className="flex items-center gap-2">
-                      <FileText className="h-5 w-5 text-green-600" />
-                      <div>
-                        <p className="text-sm font-medium text-green-900">{documentoNombre}</p>
-                        <p className="text-xs text-green-600 truncate max-w-xs">{documentoUrl}</p>
-                      </div>
-                    </div>
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => {
-                        setDocumentoUrl('')
-                        setDocumentoNombre('')
-                      }}
-                      className="text-red-600 hover:text-red-700 hover:bg-red-50"
-                    >
-                      <X className="h-4 w-4" />
-                    </Button>
-                  </div>
-                )}
+              {/* Checkbox para mostrar documento adjunto */}
+              <div className="flex items-center gap-2">
+                <input
+                  type="checkbox"
+                  id="mostrarAdjunto"
+                  checked={mostrarAdjunto}
+                  onChange={(e) => setMostrarAdjunto(e.target.checked)}
+                  className="w-4 h-4 text-primary border-gray-300 rounded focus:ring-primary"
+                />
+                <Label htmlFor="mostrarAdjunto" className="cursor-pointer text-sm">
+                  Deseo adjuntar un documento (opcional)
+                </Label>
               </div>
 
-              {/* Botones de envío */}
-              <div className="flex flex-col sm:flex-row gap-3 pt-4">
+              {/* Subida de documento - solo visible si el checkbox está marcado */}
+              {mostrarAdjunto && (
+                <div className="border border-gray-200 rounded-lg p-4 bg-gray-50">
+                  <Label htmlFor="documento">Documento adjunto</Label>
+                  <p className="text-sm text-muted-foreground mb-2">
+                    Podés subir un PDF, documento o imagen relacionada con tu consulta
+                  </p>
+                  {!documentoUrl ? (
+                    <div className="border-2 border-dashed border-gray-300 rounded-lg p-4">
+                      <UploadButton
+                        endpoint="consultaDocumentos"
+                        onClientUploadComplete={(res: any) => {
+                          if (res?.[0]?.url) {
+                            setDocumentoUrl(res[0].url)
+                            setDocumentoNombre(res[0].name || 'Documento adjunto')
+                          }
+                        }}
+                        onUploadError={(error: Error) => {
+                          alert(`Error al subir el documento: ${error.message}`)
+                        }}
+                      />
+                    </div>
+                  ) : (
+                    <div className="flex items-center justify-between p-3 bg-green-50 border border-green-200 rounded-lg">
+                      <div className="flex items-center gap-2">
+                        <FileText className="h-5 w-5 text-green-600" />
+                        <div>
+                          <p className="text-sm font-medium text-green-900">{documentoNombre}</p>
+                          <p className="text-xs text-green-600 truncate max-w-xs">{documentoUrl}</p>
+                        </div>
+                      </div>
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => {
+                          setDocumentoUrl('')
+                          setDocumentoNombre('')
+                        }}
+                        className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                      >
+                        <X className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* Botones de envío - MÁS GRANDES */}
+              <div className="flex flex-col gap-4 pt-6">
                 <Button
                   type="button"
                   onClick={form.handleSubmit(handleWhatsAppSubmit)}
-                  className="bg-[#25D366] hover:bg-[#20BA5A] flex-1"
-                  size="lg"
+                  className="w-full bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-bold shadow-lg"
+                  style={{ height: '56px', fontSize: '16px' }}
                 >
-                  <MessageCircle className="mr-2 h-5 w-5" />
+                  <MessageCircle className="mr-2 h-6 w-6" />
                   Enviar por WhatsApp
                 </Button>
                 <Button
                   type="button"
                   onClick={form.handleSubmit(handleEmailSubmit)}
                   variant="outline"
-                  className="flex-1"
-                  size="lg"
+                  className="w-full border-2 border-primary hover:bg-primary hover:text-white font-bold"
+                  style={{ height: '56px', fontSize: '16px' }}
                   disabled={isSubmitting}
                 >
                   {isSubmitting ? (
-                    <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                    <Loader2 className="mr-2 h-6 w-6 animate-spin" />
                   ) : (
-                    <Mail className="mr-2 h-5 w-5" />
+                    <Mail className="mr-2 h-6 w-6" />
                   )}
                   Enviar por Email
                 </Button>

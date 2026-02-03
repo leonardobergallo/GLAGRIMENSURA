@@ -30,7 +30,7 @@ export function ServiceHero({
   const handleEmail = () => {
     const subject = encodeURIComponent(`Consulta: ${title}`)
     const body = encodeURIComponent(whatsappMessage)
-    window.location.href = `mailto:info@glagrimensura.com?subject=${subject}&body=${body}`
+    window.location.href = `mailto:agrimensorglucero@gmail.com?subject=${subject}&body=${body}`
   }
 
   return (
@@ -50,33 +50,33 @@ export function ServiceHero({
       {/* Contenido */}
       <div className="relative z-10 max-w-6xl mx-auto px-4 py-20">
         <div className="max-w-2xl">
-          <h1 className="text-5xl md:text-6xl font-bold text-white mb-4">
+          <h1 className="text-5xl md:text-6xl font-bold text-white mb-4 font-heading">
             {title}
           </h1>
-          <p className="text-xl md:text-2xl text-gray-200 mb-6">
+          <p className="text-xl md:text-2xl text-gray-200 mb-6 font-heading">
             {subtitle}
           </p>
           <p className="text-lg text-gray-300 mb-8 leading-relaxed">
             {description}
           </p>
 
-          {/* CTAs */}
+          {/* CTAs - Botones más grandes */}
           <div className="flex flex-col sm:flex-row gap-4">
             <Button
               onClick={handleWhatsApp}
-              size="lg"
-              className="bg-[#25D366] hover:bg-[#20BA5A] text-white text-lg px-8 py-6"
+              className="bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-bold shadow-lg"
+              style={{ height: '56px', fontSize: '16px', paddingLeft: '32px', paddingRight: '32px' }}
             >
-              <MessageCircle className="mr-2 h-5 w-5" />
+              <MessageCircle className="mr-2 h-6 w-6" />
               Consultar por WhatsApp
             </Button>
             <Button
               onClick={handleEmail}
-              size="lg"
               variant="outline"
-              className="bg-white/10 hover:bg-white/20 text-white border-white/30 text-lg px-8 py-6 backdrop-blur-sm"
+              className="bg-white/10 hover:bg-white/20 text-white border-white/30 backdrop-blur-sm font-bold"
+              style={{ height: '56px', fontSize: '16px', paddingLeft: '32px', paddingRight: '32px' }}
             >
-              <Mail className="mr-2 h-5 w-5" />
+              <Mail className="mr-2 h-6 w-6" />
               Enviar Email
             </Button>
           </div>

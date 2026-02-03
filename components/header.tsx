@@ -1,6 +1,6 @@
 "use client"
-import { Button } from "@/components/ui/button"
-import { Phone } from "lucide-react"
+import { useState } from "react"
+import { Menu, X } from "lucide-react"
 import Link from "next/link"
 import Image from "next/image"
 import { usePathname, useRouter } from "next/navigation"
@@ -9,18 +9,17 @@ export function Header() {
   const pathname = usePathname()
   const router = useRouter()
   const isHome = pathname === '/'
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   const handleNavigation = (section: string) => {
+    setMobileMenuOpen(false)
     if (isHome) {
-      // Si estamos en home, scroll directo
       const element = document.getElementById(section)
       if (element) {
         element.scrollIntoView({ behavior: "smooth" })
       }
     } else {
-      // Si estamos en otra página, ir a home con hash
       router.push(`/#${section}`)
-      // Después de navegar, hacer scroll
       setTimeout(() => {
         const element = document.getElementById(section)
         if (element) {
@@ -30,11 +29,32 @@ export function Header() {
     }
   }
 
+  const navLinks = [
+    { label: 'SERVICIOS', section: 'servicios' },
+    { label: 'NOSOTROS', section: 'sobre' },
+    { label: 'TRABAJOS', section: 'galeria' },
+    { label: 'CONTACTO', section: 'contacto' },
+  ]
+
   return (
-    <header className="sticky top-0 z-50 bg-white border-b border-border shadow-sm">
-      <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
+    <header className="fixed top-0 left-0 right-0 z-50 bg-white shadow-md">
+      {/* Patrón de curvas de nivel en el header */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-5">
+        <svg 
+          className="absolute inset-0 w-full h-full"
+          viewBox="0 0 400 100" 
+          preserveAspectRatio="xMidYMid slice"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path d="M0,30 Q100,10 200,30 T400,30" fill="none" stroke="#1e3a5f" strokeWidth="0.8"/>
+          <path d="M0,50 Q100,30 200,50 T400,50" fill="none" stroke="#1e3a5f" strokeWidth="0.6"/>
+          <path d="M0,70 Q100,50 200,70 T400,70" fill="none" stroke="#1e3a5f" strokeWidth="0.5"/>
+        </svg>
+      </div>
+      
+      <div className="relative max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
         <Link href="/" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
-          <div className="relative w-24 h-24 md:w-28 md:h-28">
+          <div className="relative w-14 h-14 md:w-16 md:h-16">
             <Image
               src="/logoGeoSudFix.png"
               alt="Geo Sud Logo"
@@ -43,93 +63,97 @@ export function Header() {
               priority
             />
           </div>
-          <div>
-            <p className="text-sm font-medium text-muted-foreground">Gabriel Lucero</p>
+          <div className="hidden sm:block">
+            <p className="text-base font-bold text-gray-800">Gabriel Lucero</p>
+            <p className="text-xs text-gray-500">Agrimensura</p>
           </div>
         </Link>
 
-        <nav className="hidden md:flex items-center gap-4">
-          <Button
-            onClick={() => handleNavigation("contacto")}
-            size="sm"
-            className="bg-primary hover:bg-primary/90 text-white"
-          >
-            Solicitar Presupuesto
-          </Button>
-          <Button
-            onClick={() => handleNavigation("servicios")}
-            size="sm"
-            variant="outline"
-          >
-            Ver Servicios
-          </Button>
+        {/* Desktop Navigation - FORZADO VISIBLE */}
+        <nav style={{ display: 'flex', alignItems: 'center', gap: '24px' }}>
           <button
-            onClick={() => handleNavigation("galeria")}
-            className="text-sm font-medium hover:text-primary transition-colors cursor-pointer"
+            onClick={() => handleNavigation('servicios')}
+            style={{ 
+              background: 'none', 
+              border: 'none', 
+              fontSize: '14px', 
+              fontWeight: 600, 
+              color: '#374151',
+              cursor: 'pointer',
+              padding: '8px 4px'
+            }}
           >
-            Galería
+            SERVICIOS
           </button>
           <button
-            onClick={() => handleNavigation("sobre")}
-            className="text-sm font-medium hover:text-primary transition-colors cursor-pointer"
+            onClick={() => handleNavigation('sobre')}
+            style={{ 
+              background: 'none', 
+              border: 'none', 
+              fontSize: '14px', 
+              fontWeight: 600, 
+              color: '#374151',
+              cursor: 'pointer',
+              padding: '8px 4px'
+            }}
           >
-            Sobre Mí
+            NOSOTROS
           </button>
           <button
-            onClick={() => handleNavigation("contacto")}
-            className="text-sm font-medium hover:text-primary transition-colors cursor-pointer"
+            onClick={() => handleNavigation('galeria')}
+            style={{ 
+              background: 'none', 
+              border: 'none', 
+              fontSize: '14px', 
+              fontWeight: 600, 
+              color: '#374151',
+              cursor: 'pointer',
+              padding: '8px 4px'
+            }}
           >
-            Contacto
+            TRABAJOS
+          </button>
+          <button
+            onClick={() => handleNavigation('contacto')}
+            style={{ 
+              background: 'none', 
+              border: 'none', 
+              fontSize: '14px', 
+              fontWeight: 600, 
+              color: '#374151',
+              cursor: 'pointer',
+              padding: '8px 4px'
+            }}
+          >
+            CONTACTO
           </button>
         </nav>
 
-        <div className="hidden md:flex items-center gap-4">
-          <a
-            href="tel:+542212230052"
-            className="flex items-center gap-2 text-sm font-medium text-accent hover:text-accent/80 transition-colors"
-          >
-            <Phone size={18} />
-            <span>221-2230052</span>
-          </a>
-          <Button 
-            onClick={() => {
-              const whatsappUrl = `https://wa.me/5492212230052?text=${encodeURIComponent('Hola, necesito información sobre servicios de agrimensura')}`
-              window.open(whatsappUrl, '_blank')
-            }}
-            className="bg-[#25D366] hover:bg-[#20BA5A] text-white font-semibold"
-          >
-            Consultar WhatsApp
-          </Button>
-        </div>
-
-        <div className="md:hidden flex items-center gap-2">
-          <Button
-            onClick={() => handleNavigation("contacto")}
-            size="sm"
-            className="bg-primary hover:bg-primary/90 text-white text-xs"
-          >
-            Presupuesto
-          </Button>
-          <Button
-            onClick={() => handleNavigation("servicios")}
-            size="sm"
-            variant="outline"
-            className="text-xs"
-          >
-            Servicios
-          </Button>
-          <Button 
-            onClick={() => {
-              const whatsappUrl = `https://wa.me/5492212230052?text=${encodeURIComponent('Hola, necesito información sobre servicios de agrimensura')}`
-              window.open(whatsappUrl, '_blank')
-            }}
-            size="sm"
-            className="bg-[#25D366] hover:bg-[#20BA5A] text-xs"
-          >
-            WhatsApp
-          </Button>
-        </div>
+        {/* Mobile Menu Button */}
+        <button
+          className="md:hidden p-2 text-gray-700"
+          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+        >
+          {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+        </button>
       </div>
+
+      {/* Mobile Menu */}
+      {mobileMenuOpen && (
+        <div className="md:hidden bg-white border-t border-gray-100">
+          <nav className="flex flex-col py-4">
+            {navLinks.map((link) => (
+              <button
+                key={link.section}
+                onClick={() => handleNavigation(link.section)}
+                className="px-6 py-3 text-left text-sm font-semibold text-gray-700 hover:text-amber-500 hover:bg-gray-50 transition-colors tracking-wide"
+              >
+                {link.label}
+              </button>
+            ))}
+          </nav>
+        </div>
+      )}
     </header>
   )
 }
