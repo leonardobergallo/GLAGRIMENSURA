@@ -1,98 +1,124 @@
-import Link from "next/link"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { MapPin, Ruler, FileText, Building2, Compass, Map, ArrowRight } from "lucide-react"
 import Image from "next/image"
+import Link from "next/link"
+import {
+  ArrowRight,
+  Compass,
+  FileCheck2,
+  FileText,
+  Map,
+  MapPin,
+  Ruler,
+} from "lucide-react"
+import { Button } from "@/components/ui/button"
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card"
 
 const servicios = [
   {
-    icon: Ruler,
-    title: "Mensuras Urbanas y Rurales",
-    description: "Levantamientos planimétricos de precisión para propiedades en zona urbana y rural",
-    slug: "mensura",
-    imagen: "/servicios/mensura.svg"
-  },
-  {
-    icon: MapPin,
-    title: "Usucapión",
-    description: "Servicios de agrimensura para trámites de usucapión",
-    slug: "usucapion",
-    imagen: "/servicios/usucapion.svg"
-  },
-  {
-    icon: FileText,
-    title: "Subdivisión",
-    description: "Trámites y relevamientos para divisiones de propiedades",
-    slug: "subdivision",
-    imagen: "/servicios/subdivision.svg"
-  },
-  {
-    icon: Building2,
-    title: "Propiedad Horizontal",
-    description: "Mensuras de unidades funcionales en edificios e inmuebles",
-    slug: "ph",
-    imagen: "/servicios/ph.svg"
-  },
-  {
-    icon: Map,
-    title: "Topografía Integral",
-    description: "Relevamientos con GPS y tecnología de última generación",
-    slug: "topografia",
-    imagen: "/servicios/topografia.svg"
+    icon: FileCheck2,
+    title: "Estados parcelarios",
+    description:
+      "Documentación técnica para operaciones inmobiliarias, venta, escritura y trámites catastrales.",
+    slug: "estados-parcelarios",
+    imagen: "/servicios/mensura.svg",
   },
   {
     icon: Compass,
     title: "Amojonamientos",
-    description: "Demarcación y colocación de mojones según normas catastrales",
+    description:
+      "Demarcación precisa de límites y colocación de mojones para identificar tu terreno con seguridad.",
     slug: "amojonamientos",
-    imagen: "/servicios/amojonamientos.svg"
+    imagen: "/servicios/amojonamientos.svg",
+  },
+  {
+    icon: FileText,
+    title: "Subdivisión en propiedad horizontal (PH)",
+    description:
+      "Relevamientos, planos y asesoramiento para dividir inmuebles en unidades funcionales.",
+    slug: "ph",
+    imagen: "/servicios/ph.svg",
+  },
+  {
+    icon: Ruler,
+    title: "Mensuras Urbanas y Rurales",
+    description:
+      "Medición, delimitación y registro de propiedades urbanas y rurales con precisión técnica.",
+    slug: "mensura",
+    imagen: "/servicios/mensura.svg",
+  },
+  {
+    icon: MapPin,
+    title: "Usucapión",
+    description:
+      "Servicios de agrimensura para trámites de prescripción adquisitiva y regularización dominial.",
+    slug: "usucapion",
+    imagen: "/servicios/usucapion.svg",
+  },
+  {
+    icon: Map,
+    title: "Topografía Integral",
+    description:
+      "Relevamientos planialtimétricos para obras, proyectos, replanteos y regularizaciones.",
+    slug: "topografia",
+    imagen: "/servicios/topografia.svg",
   },
 ]
 
 export function Servicios() {
   return (
-    <section id="servicios" className="py-24 bg-secondary/30">
-      <div className="max-w-6xl mx-auto px-4">
-        <div className="text-center mb-16">
-          <h2 className="text-4xl font-bold text-primary mb-4">Nuestros Servicios</h2>
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Ofrecemos soluciones completas en agrimensura con profesionalismo y precisión técnica
+    <section id="servicios" className="bg-secondary/30 py-28">
+      <div className="mx-auto max-w-7xl px-4">
+        <div className="mb-18 text-center">
+          <h2 className="mb-5 text-5xl font-extrabold tracking-tight text-primary md:text-6xl">
+            Nuestros Servicios
+          </h2>
+          <p className="mx-auto max-w-4xl text-xl font-medium leading-relaxed text-muted-foreground md:text-2xl">
+            Presupuestos y asesoramientos personalizados en La Plata y Provincia
+            de Buenos Aires.
           </p>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-6">
-          {servicios.map((servicio, idx) => {
+        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+          {servicios.map((servicio) => {
             const Icon = servicio.icon
+
             return (
-              <Link key={idx} href={`/servicios/${servicio.slug}`}>
-                <Card className="border-primary/20 hover:border-primary/50 transition-all hover:shadow-lg h-full group cursor-pointer overflow-hidden">
-                  {/* Imagen del servicio */}
-                  <div className="relative h-48 overflow-hidden">
+              <Link key={servicio.slug} href={`/servicios/${servicio.slug}`}>
+                <Card className="group h-full cursor-pointer overflow-hidden border-2 border-primary/20 shadow-md transition-all hover:-translate-y-1 hover:border-amber-500 hover:shadow-2xl">
+                  <div className="relative h-64 overflow-hidden">
                     <Image
                       src={servicio.imagen}
                       alt={servicio.title}
                       fill
-                      className="object-cover group-hover:scale-110 transition-transform duration-300"
+                      className="object-cover transition-transform duration-300 group-hover:scale-110"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-                    <div className="absolute bottom-4 left-4">
-                      <div className="w-12 h-12 bg-white rounded-lg flex items-center justify-center">
-                        <Icon className="text-primary" size={24} />
+                    <div className="absolute inset-0 bg-gradient-to-t from-slate-950/75 via-slate-900/25 to-transparent" />
+                    <div className="absolute bottom-5 left-5">
+                      <div className="flex h-16 w-16 items-center justify-center rounded-lg bg-white shadow-lg">
+                        <Icon className="text-primary" size={34} />
                       </div>
                     </div>
                   </div>
-                  
-                  <CardHeader>
-                    <CardTitle className="text-primary group-hover:text-accent transition-colors">
+
+                  <CardHeader className="pb-3 pt-6">
+                    <CardTitle className="text-2xl font-extrabold leading-tight text-primary transition-colors group-hover:text-amber-600">
                       {servicio.title}
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <CardDescription className="text-muted-foreground mb-4">
+                    <CardDescription className="mb-6 text-lg leading-relaxed text-muted-foreground">
                       {servicio.description}
                     </CardDescription>
-                    <Button variant="ghost" className="w-full group-hover:bg-primary group-hover:text-white transition-colors">
-                      Ver más <ArrowRight className="ml-2 h-4 w-4" />
+                    <Button
+                      variant="ghost"
+                      className="h-13 w-full text-lg font-extrabold transition-colors group-hover:bg-primary group-hover:text-white"
+                    >
+                      Ver más <ArrowRight className="ml-2 h-5 w-5" />
                     </Button>
                   </CardContent>
                 </Card>

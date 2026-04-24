@@ -1,4 +1,12 @@
-import { MapPin, Ruler, FileText, Building2, Compass, Map, LucideIcon } from "lucide-react"
+import {
+  Compass,
+  FileCheck2,
+  FileText,
+  LucideIcon,
+  Map,
+  MapPin,
+  Ruler,
+} from "lucide-react"
 
 export interface Servicio {
   icon: LucideIcon
@@ -9,40 +17,45 @@ export interface Servicio {
 
 export const servicios: Servicio[] = [
   {
-    icon: Ruler,
-    title: "Mensuras Urbanas y Rurales",
-    slug: "mensuras-urbanas-y-rurales",
-    description: "Levantamientos planimétricos de precisión para propiedades en zona urbana y rural",
-  },
-  {
-    icon: FileText,
-    title: "Subdivisión",
-    slug: "subdivision",
-    description: "Trámites y relevamientos para divisiones de propiedades",
-  },
-  {
-    icon: MapPin,
-    title: "Usucapión",
-    slug: "usucapion",
-    description: "Servicios de agrimensura para trámites de usucapión",
-  },
-  {
-    icon: Building2,
-    title: "Propiedad Horizontal",
-    slug: "propiedad-horizontal",
-    description: "Mensuras de unidades funcionales en edificios e inmuebles",
+    icon: FileCheck2,
+    title: "Estados parcelarios",
+    slug: "estados-parcelarios",
+    description:
+      "Documentación técnica para operaciones inmobiliarias y trámites catastrales.",
   },
   {
     icon: Compass,
     title: "Amojonamientos",
     slug: "amojonamientos",
-    description: "Demarcación y colocación de mojones según normas catastrales",
+    description:
+      "Demarcación precisa de límites y colocación de mojones según normativa.",
+  },
+  {
+    icon: FileText,
+    title: "Subdivisión en propiedad horizontal (PH)",
+    slug: "ph",
+    description:
+      "Relevamientos y planos para dividir inmuebles en unidades funcionales.",
+  },
+  {
+    icon: Ruler,
+    title: "Mensuras Urbanas y Rurales",
+    slug: "mensura",
+    description:
+      "Medición, delimitación y registro de propiedades urbanas y rurales.",
+  },
+  {
+    icon: MapPin,
+    title: "Usucapión",
+    slug: "usucapion",
+    description:
+      "Servicios de agrimensura para trámites de prescripción adquisitiva.",
   },
   {
     icon: Map,
     title: "Topografía Integral",
-    slug: "topografia-integral",
-    description: "Relevamientos con GPS y tecnología de última generación",
+    slug: "topografia",
+    description:
+      "Relevamientos planialtimétricos para obras, proyectos y regularizaciones.",
   },
 ]
-

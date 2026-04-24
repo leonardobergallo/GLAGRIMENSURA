@@ -138,5 +138,35 @@
   font-weight: 700;
 }
 
+.site-brand-text,
+.site-desktop-nav {
+  display: none;
+}
+
+.site-mobile-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.site-mobile-menu {
+  display: block;
+}
+
+@media (min-width: 640px) {
+  .site-brand-text {
+    display: block;
+  }
+
+  .site-desktop-nav {
+    display: flex;
+  }
+
+  .site-mobile-toggle,
+  .site-mobile-menu {
+    display: none;
+  }
+}
+
 /* Uploadthing Styles */
 @import "@uploadthing/react/styles.css";

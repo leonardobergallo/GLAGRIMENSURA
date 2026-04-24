@@ -1,71 +1,60 @@
 import { Facebook, Instagram } from "lucide-react"
 import Image from "next/image"
 
+const instagramUrl = "https://www.instagram.com/glucero_agrimensor/"
+const facebookUrl = "https://www.facebook.com/agrimensor.gabriel.lucero"
+
 export function Footer() {
   return (
-    <footer className="bg-gray-900 text-white py-12">
-      <div className="max-w-6xl mx-auto px-4">
-        <div className="grid md:grid-cols-4 gap-8 mb-8">
-          {/* Logo y descripción */}
+    <footer className="bg-gray-900 py-12 text-white">
+      <div className="mx-auto max-w-6xl px-4">
+        <div className="mb-8 grid gap-8 md:grid-cols-4">
           <div>
-            <div className="flex items-center gap-3 mb-4">
-              <div className="relative w-16 h-16">
+            <div className="mb-4 flex items-center gap-3">
+              <div className="relative h-20 w-20">
                 <Image
                   src="/logoGeoSudFix.png"
-                  alt="Geo Sud Logo"
+                  alt="Gabriel Lucero Agrimensura"
                   fill
                   className="object-contain brightness-0 invert"
                 />
               </div>
               <div>
-                <h3 className="font-bold text-lg font-heading">Gabriel Lucero</h3>
-                <p className="text-xs text-gray-400">Agrimensura</p>
+                <h3 className="font-heading text-xl font-bold">Gabriel Lucero</h3>
+                <p className="text-sm text-gray-400">Ingeniero Agrimensor</p>
               </div>
             </div>
-            <p className="text-sm text-gray-400">Servicios profesionales de agrimensura en La Plata y zona de influencia.</p>
+            <p className="text-sm leading-relaxed text-gray-400">
+              Servicios profesionales de agrimensura en La Plata y Provincia de
+              Buenos Aires.
+            </p>
           </div>
 
           <div>
-            <h4 className="font-semibold mb-4 text-amber-400">Servicios</h4>
+            <h4 className="mb-4 font-semibold text-amber-400">Servicios</h4>
             <ul className="space-y-2 text-sm text-gray-400">
-              <li>
-                <a href="#servicios" className="hover:text-white transition">
-                  Mensuras
-                </a>
-              </li>
-              <li>
-                <a href="#servicios" className="hover:text-white transition">
-                  Topografía
-                </a>
-              </li>
-              <li>
-                <a href="#servicios" className="hover:text-white transition">
-                  Subdivisión
-                </a>
-              </li>
-              <li>
-                <a href="#servicios" className="hover:text-white transition">
-                  Propiedad Horizontal
-                </a>
-              </li>
+              <li><a href="#servicios" className="transition hover:text-white">Mensuras</a></li>
+              <li><a href="#servicios" className="transition hover:text-white">Topografía</a></li>
+              <li><a href="#servicios" className="transition hover:text-white">Subdivisión</a></li>
+              <li><a href="#servicios" className="transition hover:text-white">Propiedad Horizontal</a></li>
             </ul>
           </div>
 
           <div>
-            <h4 className="font-semibold mb-4 text-amber-400">Contacto</h4>
+            <h4 className="mb-4 font-semibold text-amber-400">Contacto</h4>
             <ul className="space-y-2 text-sm text-gray-400">
               <li>
-                <a href="tel:+542212230052" className="hover:text-white transition">
-                  221-2230052
+                <a href="tel:+542212230052" className="transition hover:text-white">
+                  +54 9 221 223-0052
                 </a>
               </li>
               <li>
-                <a href="mailto:agrimensorglucero@gmail.com" className="hover:text-white transition">
+                <a href="mailto:agrimensorglucero@gmail.com" className="transition hover:text-white">
                   Email
                 </a>
               </li>
               <li>
-                <a href="https://wa.me/542212230052" className="hover:text-white transition">
+                <a href="https://wa.me/5492212230052" className="transition hover:text-white">
                   WhatsApp
                 </a>
               </li>
@@ -73,19 +62,25 @@ export function Footer() {
           </div>
 
           <div>
-            <h4 className="font-semibold mb-4 text-amber-400">Redes Sociales</h4>
+            <h4 className="mb-4 font-semibold text-amber-400">Redes Sociales</h4>
             <div className="flex gap-4">
               <a
-                href="#"
-                className="w-10 h-10 bg-white/10 rounded-lg flex items-center justify-center hover:bg-amber-500 transition"
+                href={facebookUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Abrir Facebook de Gabriel Lucero"
+                className="flex h-12 w-12 items-center justify-center rounded-lg bg-white/10 transition hover:bg-amber-500 hover:text-black"
               >
-                <Facebook size={20} />
+                <Facebook size={24} />
               </a>
               <a
-                href="#"
-                className="w-10 h-10 bg-white/10 rounded-lg flex items-center justify-center hover:bg-amber-500 transition"
+                href={instagramUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Abrir Instagram glucero_agrimensor"
+                className="flex h-12 w-12 items-center justify-center rounded-lg bg-white/10 transition hover:bg-amber-500 hover:text-black"
               >
-                <Instagram size={20} />
+                <Instagram size={24} />
               </a>
             </div>
           </div>
@@ -93,7 +88,8 @@ export function Footer() {
 
         <div className="border-t border-gray-700 pt-8">
           <p className="text-center text-sm text-gray-400">
-            © 2025 GL Agrimensura - Ing. Gabriel Lucero. Matrícula CPA Nº 2883. Todos los derechos reservados.
+            © 2026 GL Agrimensura - Ing. Gabriel Lucero. Matrícula CPA N° 2883.
+            Todos los derechos reservados.
           </p>
         </div>
       </div>
