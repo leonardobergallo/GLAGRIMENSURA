@@ -35,30 +35,39 @@ export function Hero() {
           </p>
         </div>
 
-        <div className="grid w-full items-center gap-8 lg:grid-cols-[0.8fr_1.2fr]">
-          <div className="flex justify-center lg:justify-start">
-            <div className="relative h-40 w-40 rounded-md bg-white/90 p-5 shadow-2xl shadow-slate-900/15 ring-1 ring-white md:h-52 md:w-52">
-              <Image
-                src="/logoGeoSudFix.png"
-                alt="Gabriel Lucero Agrimensura"
-                fill
-                priority
-                className="object-contain p-5"
-              />
-            </div>
-          </div>
+        <div className="relative w-full max-w-6xl overflow-hidden rounded-md border border-white/70 bg-slate-950/72 p-6 text-white shadow-2xl shadow-slate-900/25 backdrop-blur-md md:p-10">
+          <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.10)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.10)_1px,transparent_1px)] bg-[length:72px_72px] opacity-35" />
+          <div className="hero-survey-scan pointer-events-none absolute inset-y-0 left-0 w-1/3 bg-[linear-gradient(90deg,transparent,rgba(255,255,255,0.20),rgba(56,189,248,0.18),transparent)]" />
 
-          <div className="relative overflow-hidden rounded-md border border-white/70 bg-white/88 p-6 text-center shadow-2xl shadow-slate-900/15 backdrop-blur-md md:p-9 lg:text-left">
-            <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(rgba(15,23,42,0.08)_1px,transparent_1px),linear-gradient(90deg,rgba(15,23,42,0.08)_1px,transparent_1px)] bg-[length:56px_56px]" />
-            <div className="hero-survey-scan pointer-events-none absolute inset-y-0 left-0 w-1/3 bg-[linear-gradient(90deg,transparent,rgba(56,189,248,0.18),transparent)]" />
-            <div className="relative">
-              <p className="mb-3 text-sm font-extrabold uppercase tracking-[0.22em] text-slate-600">
-                Agrimensura y topografía
+          <div className="relative">
+            <div className="mb-10 grid grid-cols-[auto_1fr] items-start gap-5 md:gap-8">
+              <div className="relative h-16 w-16 rounded-sm bg-white/90 shadow-lg md:h-24 md:w-24">
+                <Image
+                  src="/logoGeoSudFix.png"
+                  alt="Geo Sud"
+                  fill
+                  className="object-contain p-2"
+                />
+              </div>
+              <div className="max-w-xl pt-1">
+                <p className="text-lg font-extrabold leading-tight drop-shadow md:text-3xl">
+                  GL Agrimensura
+                </p>
+                <p className="text-base font-extrabold leading-tight drop-shadow md:text-2xl">
+                  Gabriel Lucero
+                </p>
+                <p className="text-sm font-bold leading-tight text-white/95 drop-shadow md:text-xl">
+                  Ingeniero Agrimensor
+                </p>
+              </div>
+            </div>
+
+            <div className="mx-auto max-w-4xl text-center">
+              <p className="mb-5 text-xl font-extrabold leading-relaxed drop-shadow md:text-4xl">
+                Somos un estudio integral de agrimensura, topografía y consultoría en ingeniería,
+                con sólida experiencia en la provincia de Buenos Aires.
               </p>
-              <h1 className="mb-5 text-4xl font-extrabold leading-tight text-slate-950 md:text-6xl">
-                Gabriel Lucero
-              </h1>
-              <p className="max-w-3xl text-xl font-bold leading-relaxed text-slate-800 md:text-2xl">
+              <p className="text-base font-extrabold leading-relaxed drop-shadow md:text-2xl">
                 Estados parcelarios, mensuras urbanas y rurales, deslindes, amojonamientos,
                 propiedad horizontal, usucapión y topografía de precisión para obras y agro.
               </p>
