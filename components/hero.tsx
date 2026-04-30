@@ -35,12 +35,12 @@ export function Hero() {
           </p>
         </div>
 
-        <div className="relative w-full max-w-6xl overflow-hidden rounded-md border border-white/70 bg-slate-950/72 p-6 text-white shadow-2xl shadow-slate-900/25 backdrop-blur-md md:p-10">
-          <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.10)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.10)_1px,transparent_1px)] bg-[length:72px_72px] opacity-35" />
-          <div className="hero-survey-scan pointer-events-none absolute inset-y-0 left-0 w-1/3 bg-[linear-gradient(90deg,transparent,rgba(255,255,255,0.20),rgba(56,189,248,0.18),transparent)]" />
+        <div className="relative w-full max-w-6xl px-4 py-6 text-white md:px-8 md:py-10">
+          <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.08)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.08)_1px,transparent_1px)] bg-[length:72px_72px] opacity-30" />
+          <div className="hero-survey-scan pointer-events-none absolute inset-y-0 left-0 w-1/3 bg-[linear-gradient(90deg,transparent,rgba(255,255,255,0.12),rgba(56,189,248,0.10),transparent)]" />
 
-          <div className="relative">
-            <div className="mb-10 grid grid-cols-[auto_1fr] items-start gap-5 md:gap-8">
+          <div className="relative drop-shadow-[0_3px_10px_rgba(0,0,0,0.65)]">
+            <div className="mb-8 flex flex-col items-center justify-center gap-4 text-center sm:flex-row sm:gap-6">
               <div className="relative h-16 w-16 rounded-sm bg-white/90 shadow-lg md:h-24 md:w-24">
                 <Image
                   src="/logoGeoSudFix.png"
@@ -49,7 +49,7 @@ export function Hero() {
                   className="object-contain p-2"
                 />
               </div>
-              <div className="max-w-xl pt-1">
+              <div className="max-w-xl">
                 <p className="text-lg font-extrabold leading-tight drop-shadow md:text-3xl">
                   GL Agrimensura
                 </p>
@@ -63,11 +63,11 @@ export function Hero() {
             </div>
 
             <div className="mx-auto max-w-4xl text-center">
-              <p className="mb-5 text-xl font-extrabold leading-relaxed drop-shadow md:text-4xl">
+              <p className="mx-auto mb-5 max-w-4xl text-base font-extrabold leading-relaxed md:text-2xl">
                 Somos un estudio integral de agrimensura, topografía y consultoría en ingeniería,
                 con sólida experiencia en la provincia de Buenos Aires.
               </p>
-              <p className="text-base font-extrabold leading-relaxed drop-shadow md:text-2xl">
+              <p className="mx-auto max-w-5xl text-sm font-extrabold leading-relaxed md:text-xl">
                 Estados parcelarios, mensuras urbanas y rurales, deslindes, amojonamientos,
                 propiedad horizontal, usucapión y topografía de precisión para obras y agro.
               </p>
