@@ -44,7 +44,7 @@ export function Hero() {
             <div className="absolute inset-8 rounded-full border border-white/25" />
           </div>
 
-          <div className="relative drop-shadow-[0_3px_10px_rgba(0,0,0,0.65)]">
+          <div className="relative drop-shadow-[0_4px_14px_rgba(0,0,0,0.78)]">
             <div className="mb-10 flex flex-col items-center justify-center gap-5 text-center sm:flex-row sm:gap-7">
               <div className="relative h-24 w-24 rounded-md bg-white/95 shadow-2xl shadow-slate-950/35 ring-1 ring-white md:h-32 md:w-32">
                 <Image
@@ -55,26 +55,22 @@ export function Hero() {
                 />
               </div>
               <div className="max-w-xl">
-                <p className="text-3xl font-black leading-tight tracking-tight text-white drop-shadow md:text-6xl">
+                <p className="font-heading text-3xl font-extrabold leading-tight tracking-wide text-white [text-shadow:0_3px_12px_rgba(0,0,0,0.95)] md:text-5xl">
                   GL Agrimensura
                 </p>
-                <p className="text-xl font-black leading-tight text-white drop-shadow md:text-4xl">
+                <p className="mt-1 text-xl font-bold leading-tight tracking-wide text-amber-300 [text-shadow:0_3px_10px_rgba(0,0,0,0.95)] md:text-3xl">
                   Gabriel Lucero
                 </p>
-                <p className="text-base font-extrabold leading-tight text-white drop-shadow md:text-2xl">
+                <p className="mt-1 text-base font-semibold uppercase tracking-[0.18em] text-cyan-100 [text-shadow:0_3px_10px_rgba(0,0,0,0.95)] md:text-xl">
                   Ingeniero Agrimensor
                 </p>
               </div>
             </div>
 
             <div className="mx-auto max-w-4xl text-center">
-              <p className="mx-auto mb-6 max-w-5xl text-xl font-black leading-relaxed text-white md:text-4xl">
+              <p className="mx-auto mb-6 max-w-5xl rounded-md bg-slate-950/28 px-4 py-3 font-heading text-xl font-bold leading-snug text-white [text-shadow:0_3px_12px_rgba(0,0,0,0.95)] backdrop-blur-[2px] md:text-3xl">
                 Somos un estudio integral de agrimensura, topografía y consultoría en ingeniería,
                 con sólida experiencia en la provincia de Buenos Aires.
-              </p>
-              <p className="mx-auto max-w-5xl text-lg font-black leading-relaxed text-white md:text-2xl">
-                Estados parcelarios, mensuras urbanas y rurales, deslindes, amojonamientos,
-                propiedad horizontal, usucapión y topografía de precisión para obras y agro.
               </p>
             </div>
           </div>
