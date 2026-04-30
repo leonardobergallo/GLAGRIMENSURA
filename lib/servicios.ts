@@ -18,24 +18,24 @@ export interface Servicio {
 export const servicios: Servicio[] = [
   {
     icon: FileCheck2,
-    title: "Estados parcelarios",
+    title: "Constitución de Estado Parcelario",
     slug: "estados-parcelarios",
     description:
-      "Documentación técnica para operaciones inmobiliarias y trámites catastrales.",
+      "Gestión de documentación técnica para ventas, escrituras y trámites catastrales.",
   },
   {
     icon: Compass,
-    title: "Amojonamientos",
+    title: "Deslinde y Amojonamiento",
     slug: "amojonamientos",
     description:
-      "Demarcación precisa de límites y colocación de mojones según normativa.",
+      "Determinación precisa de límites y colocación de mojones en terreno.",
   },
   {
     icon: FileText,
-    title: "Subdivisión en propiedad horizontal (PH)",
+    title: "Propiedad Horizontal (PH - PHE)",
     slug: "ph",
     description:
-      "Relevamientos y planos para dividir inmuebles en unidades funcionales.",
+      "Transformación de propiedades en unidades independientes.",
   },
   {
     icon: Ruler,
@@ -46,16 +46,16 @@ export const servicios: Servicio[] = [
   },
   {
     icon: MapPin,
-    title: "Usucapión",
+    title: "Prescripción Adquisitiva (Usucapión)",
     slug: "usucapion",
     description:
-      "Servicios de agrimensura para trámites de prescripción adquisitiva.",
+      "Plano técnico para iniciar el trámite de titularidad legal.",
   },
   {
     icon: Map,
-    title: "Topografía Integral",
+    title: "Topografía de Precisión para Ingeniería y Construcción",
     slug: "topografia",
     description:
-      "Relevamientos planialtimétricos para obras, proyectos y regularizaciones.",
+      "Soluciones topográficas para ingeniería, obras y servicios para el agro.",
   },
 ]

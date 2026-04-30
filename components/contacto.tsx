@@ -8,20 +8,38 @@ import { Card, CardContent } from "@/components/ui/card"
 
 const instagramUrl = "https://www.instagram.com/glucero_agrimensor/"
 const facebookUrl = "https://www.facebook.com/agrimensor.gabriel.lucero"
+const phoneNumber = "5492212230052"
 
 export function Contacto() {
   const [formData, setFormData] = useState({
     nombre: "",
-    email: "",
     telefono: "",
     mensaje: "",
   })
+  const [error, setError] = useState("")
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    console.log("Formulario enviado:", formData)
-    alert("Gracias por tu consulta. Nos pondremos en contacto pronto.")
-    setFormData({ nombre: "", email: "", telefono: "", mensaje: "" })
+    setError("")
+
+    if (formData.telefono.trim() && !/^[0-9+\-\s()]{8,}$/.test(formData.telefono.trim())) {
+      setError("Revisá el teléfono. Podés usar números, espacios, +, guiones o paréntesis.")
+      return
+    }
+
+    const pageUrl = typeof window !== "undefined" ? window.location.href : ""
+    let message = "*Consulta general desde el sitio web*\n"
+    if (pageUrl) message += `*Página:* ${pageUrl}\n`
+    if (formData.nombre.trim()) message += `*Nombre:* ${formData.nombre.trim()}\n`
+    if (formData.telefono.trim()) message += `*Teléfono:* ${formData.telefono.trim()}\n`
+    if (formData.mensaje.trim()) message += `\n*Mensaje:*\n${formData.mensaje.trim()}`
+
+    window.open(
+      `https://web.whatsapp.com/send?phone=${phoneNumber}&text=${encodeURIComponent(message.trim())}`,
+      "_blank",
+      "noopener,noreferrer"
+    )
+    setFormData({ nombre: "", telefono: "", mensaje: "" })
   }
 
   return (
@@ -32,7 +50,7 @@ export function Contacto() {
             Contacto
           </h2>
           <p className="mx-auto max-w-3xl text-xl font-medium leading-relaxed text-muted-foreground md:text-2xl">
-            Consultas, presupuestos y asesoramientos personalizados.
+            Consultas, presupuestos y asesoramientos personalizados por WhatsApp.
           </p>
         </div>
 
@@ -44,11 +62,9 @@ export function Contacto() {
                   <Phone className="text-amber-600" size={34} />
                 </div>
                 <div>
-                  <h3 className="mb-2 text-2xl font-extrabold text-primary">
-                    WhatsApp
-                  </h3>
+                  <h3 className="mb-2 text-2xl font-extrabold text-primary">WhatsApp</h3>
                   <a
-                    href="https://wa.me/5492212230052"
+                    href={`https://web.whatsapp.com/send?phone=${phoneNumber}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-xl font-extrabold text-amber-600 transition-colors hover:text-amber-700"
@@ -65,9 +81,7 @@ export function Contacto() {
                   <Instagram className="text-amber-600" size={34} />
                 </div>
                 <div>
-                  <h3 className="mb-2 text-2xl font-extrabold text-primary">
-                    Instagram
-                  </h3>
+                  <h3 className="mb-2 text-2xl font-extrabold text-primary">Instagram</h3>
                   <a
                     href={instagramUrl}
                     target="_blank"
@@ -86,9 +100,7 @@ export function Contacto() {
                   <Facebook className="text-amber-600" size={34} />
                 </div>
                 <div>
-                  <h3 className="mb-2 text-2xl font-extrabold text-primary">
-                    Facebook
-                  </h3>
+                  <h3 className="mb-2 text-2xl font-extrabold text-primary">Facebook</h3>
                   <a
                     href={facebookUrl}
                     target="_blank"
@@ -107,9 +119,7 @@ export function Contacto() {
                   <MapPin className="text-amber-600" size={34} />
                 </div>
                 <div>
-                  <h3 className="mb-2 text-2xl font-extrabold text-primary">
-                    Zona de atención
-                  </h3>
+                  <h3 className="mb-2 text-2xl font-extrabold text-primary">Zona de atención</h3>
                   <p className="text-xl font-semibold text-muted-foreground">
                     La Plata y Provincia de Buenos Aires
                   </p>
@@ -123,12 +133,9 @@ export function Contacto() {
             className="space-y-5 rounded-md border-2 border-primary/20 bg-secondary/30 p-8 shadow-lg md:p-10"
           >
             <div>
-              <label className="mb-2 block text-lg font-extrabold text-primary">
-                Nombre
-              </label>
+              <label className="mb-2 block text-lg font-extrabold text-primary">Nombre</label>
               <input
                 type="text"
-                required
                 value={formData.nombre}
                 onChange={(e) => setFormData({ ...formData, nombre: e.target.value })}
                 className="w-full rounded-lg border border-border px-5 py-4 text-lg focus:outline-none focus:ring-2 focus:ring-primary/50"
@@ -137,23 +144,7 @@ export function Contacto() {
             </div>
 
             <div>
-              <label className="mb-2 block text-lg font-extrabold text-primary">
-                Email
-              </label>
-              <input
-                type="email"
-                required
-                value={formData.email}
-                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                className="w-full rounded-lg border border-border px-5 py-4 text-lg focus:outline-none focus:ring-2 focus:ring-primary/50"
-                placeholder="tu@email.com"
-              />
-            </div>
-
-            <div>
-              <label className="mb-2 block text-lg font-extrabold text-primary">
-                Teléfono
-              </label>
+              <label className="mb-2 block text-lg font-extrabold text-primary">Teléfono</label>
               <input
                 type="tel"
                 value={formData.telefono}
@@ -161,14 +152,12 @@ export function Contacto() {
                 className="w-full rounded-lg border border-border px-5 py-4 text-lg focus:outline-none focus:ring-2 focus:ring-primary/50"
                 placeholder="+54 9 221 223-0052"
               />
+              {error && <p className="mt-2 text-sm font-semibold text-red-600">{error}</p>}
             </div>
 
             <div>
-              <label className="mb-2 block text-lg font-extrabold text-primary">
-                Mensaje
-              </label>
+              <label className="mb-2 block text-lg font-extrabold text-primary">Mensaje</label>
               <textarea
-                required
                 value={formData.mensaje}
                 onChange={(e) => setFormData({ ...formData, mensaje: e.target.value })}
                 className="w-full resize-none rounded-lg border border-border px-5 py-4 text-lg focus:outline-none focus:ring-2 focus:ring-primary/50"
@@ -177,9 +166,9 @@ export function Contacto() {
               />
             </div>
 
-            <Button type="submit" className="w-full bg-primary py-7 text-xl font-extrabold hover:bg-primary/90">
+            <Button type="submit" className="w-full bg-green-600 py-7 text-xl font-extrabold text-white hover:bg-green-700">
               <MessageCircle className="mr-2 h-6 w-6" />
-              Enviar consulta
+              Enviar por WhatsApp
             </Button>
           </form>
         </div>

@@ -17,62 +17,37 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
+import { getAllServicios, Servicio as ServicioData, ServicioSlug } from "@/lib/servicios-data"
 
-const servicios = [
-  {
-    icon: FileCheck2,
-    title: "Estados parcelarios",
-    description:
-      "Documentación técnica para operaciones inmobiliarias, venta, escritura y trámites catastrales.",
-    slug: "estados-parcelarios",
-    imagen: "/servicios/mensura.svg",
-  },
-  {
-    icon: Compass,
-    title: "Amojonamientos",
-    description:
-      "Demarcación precisa de límites y colocación de mojones para identificar tu terreno con seguridad.",
-    slug: "amojonamientos",
-    imagen: "/servicios/amojonamientos.svg",
-  },
-  {
-    icon: FileText,
-    title: "Subdivisión en propiedad horizontal (PH)",
-    description:
-      "Relevamientos, planos y asesoramiento para dividir inmuebles en unidades funcionales.",
-    slug: "ph",
-    imagen: "/servicios/ph.svg",
-  },
-  {
-    icon: Ruler,
-    title: "Mensuras Urbanas y Rurales",
-    description:
-      "Medición, delimitación y registro de propiedades urbanas y rurales con precisión técnica.",
-    slug: "mensura",
-    imagen: "/servicios/mensura.svg",
-  },
-  {
-    icon: MapPin,
-    title: "Usucapión",
-    description:
-      "Servicios de agrimensura para trámites de prescripción adquisitiva y regularización dominial.",
-    slug: "usucapion",
-    imagen: "/servicios/usucapion.svg",
-  },
-  {
-    icon: Map,
-    title: "Topografía Integral",
-    description:
-      "Relevamientos planialtimétricos para obras, proyectos, replanteos y regularizaciones.",
-    slug: "topografia",
-    imagen: "/servicios/topografia.svg",
-  },
+const iconos: Record<ServicioSlug, typeof FileCheck2> = {
+  "estados-parcelarios": FileCheck2,
+  amojonamientos: Compass,
+  ph: FileText,
+  mensura: Ruler,
+  usucapion: MapPin,
+  topografia: Map,
+  subdivision: Ruler,
+}
+
+const orden: ServicioSlug[] = [
+  "estados-parcelarios",
+  "amojonamientos",
+  "ph",
+  "mensura",
+  "usucapion",
+  "topografia",
 ]
+
+const servicios = orden
+  .map((slug) => getAllServicios().find((servicio) => servicio.slug === slug))
+  .filter((servicio): servicio is ServicioData => Boolean(servicio))
 
 export function Servicios() {
   return (
-    <section id="servicios" className="bg-secondary/30 py-28">
-      <div className="mx-auto max-w-7xl px-4">
+    <section id="servicios" className="relative overflow-hidden bg-slate-50 py-28">
+      <div className="absolute inset-0 bg-[url('/relieve-topografico.svg')] bg-[length:620px_360px] bg-center opacity-35" />
+      <div className="absolute inset-0 bg-white/55" />
+      <div className="relative mx-auto max-w-7xl px-4">
         <div className="mb-18 text-center">
           <h2 className="mb-5 text-5xl font-extrabold tracking-tight text-primary md:text-6xl">
             Nuestros Servicios
@@ -85,38 +60,37 @@ export function Servicios() {
 
         <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
           {servicios.map((servicio) => {
-            const Icon = servicio.icon
+            const Icon = iconos[servicio.slug]
 
             return (
               <Link key={servicio.slug} href={`/servicios/${servicio.slug}`}>
-                <Card className="group h-full cursor-pointer overflow-hidden border-2 border-primary/20 shadow-md transition-all hover:-translate-y-1 hover:border-amber-500 hover:shadow-2xl">
-                  <div className="relative h-64 overflow-hidden">
+                <Card className="group flex h-full min-h-[520px] cursor-pointer flex-col overflow-hidden border border-slate-200 shadow-md transition-all hover:-translate-y-1 hover:border-slate-400 hover:shadow-xl">
+                  <div className="relative h-48 overflow-hidden bg-primary">
                     <Image
                       src={servicio.imagen}
                       alt={servicio.title}
                       fill
-                      className="object-cover transition-transform duration-300 group-hover:scale-110"
+                      className="object-cover transition-transform duration-300 group-hover:scale-105"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-slate-950/75 via-slate-900/25 to-transparent" />
-                    <div className="absolute bottom-5 left-5">
-                      <div className="flex h-16 w-16 items-center justify-center rounded-lg bg-white shadow-lg">
-                        <Icon className="text-primary" size={34} />
+                    <div className="absolute inset-0 bg-[url('/relieve-topografico.svg')] bg-cover bg-center opacity-45 mix-blend-screen" />
+                    <div className="absolute inset-0 bg-gradient-to-br from-blue-950/20 via-blue-800/10 to-sky-500/20" />
+                    <div className="absolute right-4 top-4">
+                      <div className="flex h-14 w-14 items-center justify-center rounded-md bg-white/95 shadow-lg ring-1 ring-slate-200">
+                        <Icon className="text-primary" size={30} />
                       </div>
                     </div>
                   </div>
 
-                  <CardHeader className="pb-3 pt-6">
-                    <CardTitle className="text-2xl font-extrabold leading-tight text-primary transition-colors group-hover:text-amber-600">
-                      {servicio.title}
-                    </CardTitle>
+                  <CardHeader className="sr-only">
+                    <CardTitle>{servicio.title}</CardTitle>
                   </CardHeader>
-                  <CardContent>
-                    <CardDescription className="mb-6 text-lg leading-relaxed text-muted-foreground">
+                  <CardContent className="flex flex-1 flex-col pt-8">
+                    <CardDescription className="mb-6 line-clamp-5 text-base leading-relaxed text-muted-foreground md:text-lg">
                       {servicio.description}
                     </CardDescription>
                     <Button
                       variant="ghost"
-                      className="h-13 w-full text-lg font-extrabold transition-colors group-hover:bg-primary group-hover:text-white"
+                      className="mt-auto h-13 w-full text-lg font-extrabold transition-colors group-hover:bg-primary group-hover:text-white"
                     >
                       Ver más <ArrowRight className="ml-2 h-5 w-5" />
                     </Button>

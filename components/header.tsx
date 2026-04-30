@@ -43,44 +43,31 @@ export function Header() {
   ]
 
   return (
-    <header className="fixed left-0 right-0 top-0 z-50 border-b border-amber-400/40 bg-slate-950/95 shadow-xl backdrop-blur">
-      <div className="pointer-events-none absolute inset-0 overflow-hidden opacity-15">
-        <svg
-          className="absolute inset-0 h-full w-full"
-          viewBox="0 0 400 100"
-          preserveAspectRatio="xMidYMid slice"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path d="M0,30 Q100,10 200,30 T400,30" fill="none" stroke="#fbbf24" strokeWidth="0.8" />
-          <path d="M0,50 Q100,30 200,50 T400,50" fill="none" stroke="#fbbf24" strokeWidth="0.6" />
-          <path d="M0,70 Q100,50 200,70 T400,70" fill="none" stroke="#fbbf24" strokeWidth="0.5" />
-        </svg>
-      </div>
-
+    <header className="fixed left-0 right-0 top-0 z-50 border-b-2 border-slate-300 bg-white shadow-lg shadow-slate-900/10">
       <div className="relative mx-auto flex max-w-[1500px] flex-col items-center px-4 py-2">
         <div className="flex w-full items-center justify-between">
           <Link href="/" className="flex min-w-0 items-center gap-3 transition-opacity hover:opacity-85">
-            <div className="relative h-20 w-20 flex-shrink-0 md:h-24 md:w-24">
+            <div className="relative h-14 w-14 flex-shrink-0 md:h-16 md:w-16">
               <Image
                 src="/logoGeoSudFix.png"
                 alt="Gabriel Lucero Agrimensura"
                 fill
-                className="object-contain brightness-0 invert"
+                className="object-contain"
                 priority
               />
             </div>
             <div className="site-brand-text min-w-0">
-              <p className="text-xl font-extrabold leading-tight text-white md:text-2xl">
+              <p className="text-lg font-extrabold leading-tight text-slate-950 md:text-xl">
                 Gabriel Lucero
               </p>
-              <p className="text-sm font-extrabold uppercase tracking-wide text-amber-400 md:text-base">
+              <p className="text-xs font-extrabold uppercase tracking-wide text-slate-600 md:text-sm">
                 Ingeniero Agrimensor
               </p>
             </div>
           </Link>
 
           <button
-            className="site-mobile-toggle rounded-lg p-3 text-white"
+            className="site-mobile-toggle rounded-md border border-slate-200 p-3 text-slate-900"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             aria-label="Abrir menu"
           >
@@ -88,7 +75,7 @@ export function Header() {
           </button>
         </div>
 
-        <nav className="site-desktop-nav mt-1 w-full items-center justify-center gap-2 border-t border-white/15 pt-2 lg:gap-4">
+        <nav className="site-desktop-nav mt-2 w-full items-center justify-center gap-3 border-t border-slate-300 pt-2 lg:gap-5">
           {navLinks.map((link) => {
             const isPrimary = link.section === "servicios" || link.section === "contacto"
 
@@ -96,10 +83,10 @@ export function Header() {
               <button
                 key={link.section}
                 onClick={() => handleNavigation(link.section)}
-                className={`rounded-full px-4 py-3 text-sm font-extrabold tracking-wide transition-all lg:px-7 lg:text-base ${
+                className={`rounded-md border px-4 py-3 text-sm font-extrabold tracking-wide shadow-sm transition-colors lg:px-6 lg:text-base ${
                   isPrimary
-                    ? "bg-amber-500 text-black shadow-md hover:bg-amber-300"
-                    : "text-white hover:bg-white/10 hover:text-amber-300"
+                    ? "border-slate-950 bg-slate-950 text-white hover:bg-slate-700"
+                    : "border-slate-300 bg-white text-slate-950 hover:border-slate-500 hover:bg-slate-100"
                 }`}
               >
                 {link.label}
@@ -110,13 +97,13 @@ export function Header() {
       </div>
 
       {mobileMenuOpen && (
-        <div className="site-mobile-menu border-t border-white/15 bg-slate-950">
+        <div className="site-mobile-menu border-t border-slate-300 bg-white shadow-lg">
           <nav className="flex flex-col py-4">
             {navLinks.map((link) => (
               <button
                 key={link.section}
                 onClick={() => handleNavigation(link.section)}
-                className="px-6 py-4 text-left text-lg font-extrabold tracking-wide text-white transition-colors hover:bg-white/10 hover:text-amber-300"
+                className="px-6 py-4 text-left text-lg font-extrabold tracking-wide text-slate-900 transition-colors hover:bg-slate-100"
               >
                 {link.label}
               </button>

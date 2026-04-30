@@ -2,6 +2,7 @@ import { Metadata } from 'next'
 import { Header } from '@/components/header'
 import { Footer } from '@/components/footer'
 import { ServiceHero } from '@/components/service-page/service-hero'
+import { ServiceDetails } from '@/components/service-page/service-details'
 import { ServiceBenefits } from '@/components/service-page/service-benefits'
 import { ServiceForm } from '@/components/service-page/service-form'
 import { PlanosViewerDB } from '@/components/service-page/planos-viewer-db'
@@ -32,6 +33,8 @@ export default function PHPage() {
         imagen={servicio.imagen}
         whatsappMessage={servicio.whatsappMessage}
       />
+
+      <ServiceDetails sections={servicio.sections} />
 
       <ServiceBenefits benefits={servicio.benefits} />
 

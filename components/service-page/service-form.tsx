@@ -9,48 +9,63 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { Label } from '@/components/ui/label'
-import { MessageCircle, Mail, Loader2, CheckCircle, FileText, X } from 'lucide-react'
+import { CheckCircle, FileText, MessageCircle, X } from 'lucide-react'
 import { ServicioSlug } from '@/lib/servicios-data'
 import { UploadButton } from '@/lib/uploadthing'
 
+const optionalText = (message: string, min = 2) =>
+  z.string().optional().refine((value) => !value || value.trim().length >= min, message)
+
+const optionalPhone = z
+  .string()
+  .optional()
+  .refine(
+    (value) => !value || /^[0-9+\-\s()]{8,}$/.test(value.trim()),
+    'Revisá el teléfono. Podés usar números, espacios, +, guiones o paréntesis.'
+  )
+
 const baseSchema = z.object({
-  nombre: z.string().min(2, 'El nombre es muy corto'),
-  email: z.string().email('Email inválido'),
-  telefono: z.string().min(10, 'Teléfono inválido'),
+  nombre: optionalText('Revisá el nombre. Si lo completás, usá al menos 2 caracteres.'),
+  telefono: optionalPhone,
   mensaje: z.string().optional(),
 })
 
-// Esquemas específicos por servicio
 const schemas: Record<ServicioSlug, z.ZodType<any>> = {
+  'estados-parcelarios': baseSchema.extend({
+    direccion: optionalText('Revisá la dirección. Si la completás, usá al menos 5 caracteres.', 5),
+    partido: optionalText('Revisá el partido. Si lo completás, usá al menos 2 caracteres.'),
+    partida: z.string().optional(),
+    nomenclatura: z.string().optional(),
+  }),
   mensura: baseSchema.extend({
-    direccion: z.string().min(5, 'Dirección es requerida'),
-    partido: z.string().min(2, 'Partido es requerido'),
+    direccion: optionalText('Revisá la dirección. Si la completás, usá al menos 5 caracteres.', 5),
+    partido: optionalText('Revisá el partido. Si lo completás, usá al menos 2 caracteres.'),
   }),
   usucapion: baseSchema.extend({
-    direccion: z.string().min(5, 'Dirección es requerida'),
-    partido: z.string().min(2, 'Partido es requerido'),
+    direccion: optionalText('Revisá la dirección. Si la completás, usá al menos 5 caracteres.', 5),
+    partido: optionalText('Revisá el partido. Si lo completás, usá al menos 2 caracteres.'),
     superficie: z.string().optional(),
     aniosPosesion: z.string().optional(),
   }),
   subdivision: baseSchema.extend({
-    direccion: z.string().min(5, 'Dirección es requerida'),
-    partido: z.string().min(2, 'Partido es requerido'),
+    direccion: optionalText('Revisá la dirección. Si la completás, usá al menos 5 caracteres.', 5),
+    partido: optionalText('Revisá el partido. Si lo completás, usá al menos 2 caracteres.'),
     superficieTotal: z.string().optional(),
     lotesDeseados: z.string().optional(),
   }),
   ph: baseSchema.extend({
-    direccion: z.string().min(5, 'Dirección es requerida'),
-    partido: z.string().min(2, 'Partido es requerido'),
+    direccion: optionalText('Revisá la dirección. Si la completás, usá al menos 5 caracteres.', 5),
+    partido: optionalText('Revisá el partido. Si lo completás, usá al menos 2 caracteres.'),
     cantidadUnidades: z.string().optional(),
     tipoInmueble: z.string().optional(),
   }),
   topografia: baseSchema.extend({
-    ubicacion: z.string().min(5, 'Ubicación es requerida'),
+    ubicacion: optionalText('Revisá la ubicación. Si la completás, usá al menos 5 caracteres.', 5),
     tipoTrabajo: z.string().optional(),
   }),
   amojonamientos: baseSchema.extend({
-    direccion: z.string().min(5, 'Dirección es requerida'),
-    partido: z.string().min(2, 'Partido es requerido'),
+    direccion: optionalText('Revisá la dirección. Si la completás, usá al menos 5 caracteres.', 5),
+    partido: optionalText('Revisá el partido. Si lo completás, usá al menos 2 caracteres.'),
     cantidadMojones: z.string().optional(),
   }),
 }
@@ -62,7 +77,6 @@ interface ServiceFormProps {
 }
 
 export function ServiceForm({ servicio, title, phoneNumber = '5492212230052' }: ServiceFormProps) {
-  const [isSubmitting, setIsSubmitting] = useState(false)
   const [isSuccess, setIsSuccess] = useState(false)
   const [documentoUrl, setDocumentoUrl] = useState<string>('')
   const [documentoNombre, setDocumentoNombre] = useState<string>('')
@@ -72,57 +86,36 @@ export function ServiceForm({ servicio, title, phoneNumber = '5492212230052' }: 
     resolver: zodResolver(schemas[servicio]),
     defaultValues: {
       nombre: '',
-      email: '',
       telefono: '',
       mensaje: '',
     },
   })
 
   const handleWhatsAppSubmit = (data: any) => {
-    const mensaje = formatWhatsAppMessage(data, servicio, title, documentoUrl)
+    const pageUrl = typeof window !== 'undefined' ? window.location.href : ''
+    const mensaje = formatWhatsAppMessage(data, title, pageUrl, documentoUrl)
     const encodedMessage = encodeURIComponent(mensaje)
-    const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodedMessage}`
-    window.open(whatsappUrl, '_blank')
+    const whatsappUrl = `https://web.whatsapp.com/send?phone=${phoneNumber}&text=${encodedMessage}`
+    window.open(whatsappUrl, '_blank', 'noopener,noreferrer')
     setIsSuccess(true)
-    // Resetear formulario después de un momento
+
     setTimeout(() => {
       form.reset()
       setDocumentoUrl('')
       setDocumentoNombre('')
+      setMostrarAdjunto(false)
       setIsSuccess(false)
     }, 3000)
   }
 
-  const handleEmailSubmit = async (data: any) => {
-    setIsSubmitting(true)
-    try {
-      const response = await fetch('/api/contact', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...data, servicio, title, documentoUrl, documentoNombre }),
-      })
-      
-      if (response.ok) {
-        setIsSuccess(true)
-        form.reset()
-        setDocumentoUrl('')
-        setDocumentoNombre('')
-      }
-    } catch (error) {
-      console.error('Error:', error)
-    } finally {
-      setIsSubmitting(false)
-    }
-  }
-
   if (isSuccess) {
     return (
-      <Card className="max-w-2xl mx-auto">
-        <CardContent className="text-center py-12">
-          <CheckCircle className="h-16 w-16 text-green-500 mx-auto mb-4" />
-          <h3 className="text-2xl font-bold mb-2">¡Mensaje enviado!</h3>
+      <Card className="mx-auto max-w-2xl">
+        <CardContent className="py-12 text-center">
+          <CheckCircle className="mx-auto mb-4 h-16 w-16 text-green-500" />
+          <h3 className="mb-2 text-2xl font-bold">Consulta abierta en WhatsApp</h3>
           <p className="text-muted-foreground">
-            Gracias por tu consulta. Te responderemos a la brevedad.
+            Se abrió WhatsApp Web con el mensaje preparado para enviar.
           </p>
         </CardContent>
       </Card>
@@ -130,64 +123,34 @@ export function ServiceForm({ servicio, title, phoneNumber = '5492212230052' }: 
   }
 
   return (
-    <section className="py-16 bg-background">
-      <div className="max-w-2xl mx-auto px-4">
+    <section className="bg-background py-16">
+      <div className="mx-auto max-w-2xl px-4">
         <Card>
           <CardHeader>
             <CardTitle className="text-2xl font-heading">Solicitá tu presupuesto</CardTitle>
             <CardDescription>
-              Completá el formulario y te contactaremos a la brevedad
+              Completá solo los datos que quieras compartir. La consulta se envía por WhatsApp.
             </CardDescription>
           </CardHeader>
           <CardContent>
             <form className="space-y-4">
-              {/* Campos comunes */}
-              <div className="grid md:grid-cols-2 gap-4">
-                <div>
-                  <Label htmlFor="nombre">Nombre completo *</Label>
-                  <Input
-                    id="nombre"
-                    {...form.register('nombre')}
-                    placeholder="Juan Pérez"
-                  />
-                  {form.formState.errors.nombre && (
-                    <p className="text-sm text-red-500 mt-1">
-                      {form.formState.errors.nombre.message as string}
-                    </p>
-                  )}
-                </div>
-
-                <div>
-                  <Label htmlFor="telefono">Teléfono *</Label>
-                  <Input
-                    id="telefono"
-                    {...form.register('telefono')}
-                    placeholder="221 123 4567"
-                  />
-                  {form.formState.errors.telefono && (
-                    <p className="text-sm text-red-500 mt-1">
-                      {form.formState.errors.telefono.message as string}
-                    </p>
-                  )}
-                </div>
-              </div>
-
-              <div>
-                <Label htmlFor="email">Email *</Label>
-                <Input
-                  id="email"
-                  type="email"
-                  {...form.register('email')}
-                  placeholder="juan@ejemplo.com"
+              <div className="grid gap-4 md:grid-cols-2">
+                <FormField
+                  id="nombre"
+                  label="Nombre completo"
+                  placeholder="Juan Pérez"
+                  register={form.register('nombre')}
+                  error={form.formState.errors.nombre?.message as string}
                 />
-                {form.formState.errors.email && (
-                  <p className="text-sm text-red-500 mt-1">
-                    {form.formState.errors.email.message as string}
-                  </p>
-                )}
+                <FormField
+                  id="telefono"
+                  label="Teléfono"
+                  placeholder="+54 9 221 223-0052"
+                  register={form.register('telefono')}
+                  error={form.formState.errors.telefono?.message as string}
+                />
               </div>
 
-              {/* Campos específicos por servicio */}
               {renderSpecificFields(servicio, form)}
 
               <div>
@@ -200,29 +163,27 @@ export function ServiceForm({ servicio, title, phoneNumber = '5492212230052' }: 
                 />
               </div>
 
-              {/* Checkbox para mostrar documento adjunto */}
               <div className="flex items-center gap-2">
                 <input
                   type="checkbox"
                   id="mostrarAdjunto"
                   checked={mostrarAdjunto}
                   onChange={(e) => setMostrarAdjunto(e.target.checked)}
-                  className="w-4 h-4 text-primary border-gray-300 rounded focus:ring-primary"
+                  className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
                 />
                 <Label htmlFor="mostrarAdjunto" className="cursor-pointer text-sm">
                   Deseo adjuntar un documento (opcional)
                 </Label>
               </div>
 
-              {/* Subida de documento - solo visible si el checkbox está marcado */}
               {mostrarAdjunto && (
-                <div className="border border-gray-200 rounded-lg p-4 bg-gray-50">
+                <div className="rounded-lg border border-gray-200 bg-gray-50 p-4">
                   <Label htmlFor="documento">Documento adjunto</Label>
-                  <p className="text-sm text-muted-foreground mb-2">
-                    Podés subir un PDF, documento o imagen relacionada con tu consulta
+                  <p className="mb-2 text-sm text-muted-foreground">
+                    Podés subir un PDF, documento o imagen relacionada con tu consulta.
                   </p>
                   {!documentoUrl ? (
-                    <div className="border-2 border-dashed border-gray-300 rounded-lg p-4">
+                    <div className="rounded-lg border-2 border-dashed border-gray-300 p-4">
                       <UploadButton
                         endpoint="consultaDocumentos"
                         onClientUploadComplete={(res: any) => {
@@ -237,12 +198,12 @@ export function ServiceForm({ servicio, title, phoneNumber = '5492212230052' }: 
                       />
                     </div>
                   ) : (
-                    <div className="flex items-center justify-between p-3 bg-green-50 border border-green-200 rounded-lg">
+                    <div className="flex items-center justify-between rounded-lg border border-green-200 bg-green-50 p-3">
                       <div className="flex items-center gap-2">
                         <FileText className="h-5 w-5 text-green-600" />
                         <div>
                           <p className="text-sm font-medium text-green-900">{documentoNombre}</p>
-                          <p className="text-xs text-green-600 truncate max-w-xs">{documentoUrl}</p>
+                          <p className="max-w-xs truncate text-xs text-green-600">{documentoUrl}</p>
                         </div>
                       </div>
                       <Button
@@ -253,7 +214,7 @@ export function ServiceForm({ servicio, title, phoneNumber = '5492212230052' }: 
                           setDocumentoUrl('')
                           setDocumentoNombre('')
                         }}
-                        className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                        className="text-red-600 hover:bg-red-50 hover:text-red-700"
                       >
                         <X className="h-4 w-4" />
                       </Button>
@@ -262,31 +223,15 @@ export function ServiceForm({ servicio, title, phoneNumber = '5492212230052' }: 
                 </div>
               )}
 
-              {/* Botones de envío - MÁS GRANDES */}
-              <div className="flex flex-col gap-4 pt-6">
+              <div className="pt-6">
                 <Button
                   type="button"
                   onClick={form.handleSubmit(handleWhatsAppSubmit)}
-                  className="w-full bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-bold shadow-lg"
+                  className="w-full bg-gradient-to-r from-green-500 to-green-600 font-bold text-white shadow-lg hover:from-green-600 hover:to-green-700"
                   style={{ height: '56px', fontSize: '16px' }}
                 >
                   <MessageCircle className="mr-2 h-6 w-6" />
                   Enviar por WhatsApp
-                </Button>
-                <Button
-                  type="button"
-                  onClick={form.handleSubmit(handleEmailSubmit)}
-                  variant="outline"
-                  className="w-full border-2 border-primary hover:bg-primary hover:text-white font-bold"
-                  style={{ height: '56px', fontSize: '16px' }}
-                  disabled={isSubmitting}
-                >
-                  {isSubmitting ? (
-                    <Loader2 className="mr-2 h-6 w-6 animate-spin" />
-                  ) : (
-                    <Mail className="mr-2 h-6 w-6" />
-                  )}
-                  Enviar por Email
                 </Button>
               </div>
             </form>
@@ -297,163 +242,142 @@ export function ServiceForm({ servicio, title, phoneNumber = '5492212230052' }: 
   )
 }
 
+function FormField({
+  id,
+  label,
+  placeholder,
+  register,
+  error,
+}: {
+  id: string
+  label: string
+  placeholder?: string
+  register: any
+  error?: string
+}) {
+  return (
+    <div>
+      <Label htmlFor={id}>{label}</Label>
+      <Input id={id} {...register} placeholder={placeholder} />
+      {error && <p className="mt-1 text-sm text-red-500">{error}</p>}
+    </div>
+  )
+}
+
 function renderSpecificFields(servicio: ServicioSlug, form: any) {
+  const error = (name: string) => form.formState.errors[name]?.message as string | undefined
+
   switch (servicio) {
+    case 'estados-parcelarios':
+      return (
+        <>
+          <div className="grid gap-4 md:grid-cols-2">
+            <FormField id="direccion" label="Dirección" register={form.register('direccion')} error={error('direccion')} />
+            <FormField id="partido" label="Partido" register={form.register('partido')} error={error('partido')} />
+          </div>
+          <div className="grid gap-4 md:grid-cols-2">
+            <FormField id="partida" label="Partida inmobiliaria" register={form.register('partida')} />
+            <FormField id="nomenclatura" label="Nomenclatura catastral" register={form.register('nomenclatura')} />
+          </div>
+        </>
+      )
     case 'mensura':
       return (
-        <div className="grid md:grid-cols-2 gap-4">
-          <div>
-            <Label htmlFor="direccion">Dirección *</Label>
-            <Input id="direccion" {...form.register('direccion')} />
-          </div>
-          <div>
-            <Label htmlFor="partido">Partido *</Label>
-            <Input id="partido" {...form.register('partido')} />
-          </div>
+        <div className="grid gap-4 md:grid-cols-2">
+          <FormField id="direccion" label="Dirección" register={form.register('direccion')} error={error('direccion')} />
+          <FormField id="partido" label="Partido" register={form.register('partido')} error={error('partido')} />
         </div>
       )
-
     case 'usucapion':
       return (
         <>
-          <div className="grid md:grid-cols-2 gap-4">
-            <div>
-              <Label htmlFor="direccion">Dirección *</Label>
-              <Input id="direccion" {...form.register('direccion')} />
-            </div>
-            <div>
-              <Label htmlFor="partido">Partido *</Label>
-              <Input id="partido" {...form.register('partido')} />
-            </div>
+          <div className="grid gap-4 md:grid-cols-2">
+            <FormField id="direccion" label="Dirección" register={form.register('direccion')} error={error('direccion')} />
+            <FormField id="partido" label="Partido" register={form.register('partido')} error={error('partido')} />
           </div>
-          <div className="grid md:grid-cols-2 gap-4">
-            <div>
-              <Label htmlFor="superficie">Superficie aproximada</Label>
-              <Input id="superficie" {...form.register('superficie')} placeholder="Ej: 300 m²" />
-            </div>
-            <div>
-              <Label htmlFor="aniosPosesion">Años de posesión</Label>
-              <Input id="aniosPosesion" {...form.register('aniosPosesion')} placeholder="Ej: 20 años" />
-            </div>
+          <div className="grid gap-4 md:grid-cols-2">
+            <FormField id="superficie" label="Superficie aproximada" placeholder="Ej: 300 m²" register={form.register('superficie')} />
+            <FormField id="aniosPosesion" label="Años de posesión" placeholder="Ej: 20 años" register={form.register('aniosPosesion')} />
           </div>
         </>
       )
-
     case 'subdivision':
       return (
         <>
-          <div className="grid md:grid-cols-2 gap-4">
-            <div>
-              <Label htmlFor="direccion">Dirección *</Label>
-              <Input id="direccion" {...form.register('direccion')} />
-            </div>
-            <div>
-              <Label htmlFor="partido">Partido *</Label>
-              <Input id="partido" {...form.register('partido')} />
-            </div>
+          <div className="grid gap-4 md:grid-cols-2">
+            <FormField id="direccion" label="Dirección" register={form.register('direccion')} error={error('direccion')} />
+            <FormField id="partido" label="Partido" register={form.register('partido')} error={error('partido')} />
           </div>
-          <div className="grid md:grid-cols-2 gap-4">
-            <div>
-              <Label htmlFor="superficieTotal">Superficie total</Label>
-              <Input id="superficieTotal" {...form.register('superficieTotal')} placeholder="Ej: 1000 m²" />
-            </div>
-            <div>
-              <Label htmlFor="lotesDeseados">Cantidad de lotes</Label>
-              <Input id="lotesDeseados" {...form.register('lotesDeseados')} placeholder="Ej: 4 lotes" />
-            </div>
+          <div className="grid gap-4 md:grid-cols-2">
+            <FormField id="superficieTotal" label="Superficie total" placeholder="Ej: 1000 m²" register={form.register('superficieTotal')} />
+            <FormField id="lotesDeseados" label="Cantidad de lotes" placeholder="Ej: 4 lotes" register={form.register('lotesDeseados')} />
           </div>
         </>
       )
-
     case 'ph':
       return (
         <>
-          <div className="grid md:grid-cols-2 gap-4">
-            <div>
-              <Label htmlFor="direccion">Dirección *</Label>
-              <Input id="direccion" {...form.register('direccion')} />
-            </div>
-            <div>
-              <Label htmlFor="partido">Partido *</Label>
-              <Input id="partido" {...form.register('partido')} />
-            </div>
+          <div className="grid gap-4 md:grid-cols-2">
+            <FormField id="direccion" label="Dirección" register={form.register('direccion')} error={error('direccion')} />
+            <FormField id="partido" label="Partido" register={form.register('partido')} error={error('partido')} />
           </div>
-          <div className="grid md:grid-cols-2 gap-4">
-            <div>
-              <Label htmlFor="cantidadUnidades">Cantidad de unidades</Label>
-              <Input id="cantidadUnidades" {...form.register('cantidadUnidades')} placeholder="Ej: 8 unidades" />
-            </div>
-            <div>
-              <Label htmlFor="tipoInmueble">Tipo de inmueble</Label>
-              <Input id="tipoInmueble" {...form.register('tipoInmueble')} placeholder="Edificio, dúplex, etc." />
-            </div>
+          <div className="grid gap-4 md:grid-cols-2">
+            <FormField id="cantidadUnidades" label="Cantidad de unidades" placeholder="Ej: 8 unidades" register={form.register('cantidadUnidades')} />
+            <FormField id="tipoInmueble" label="Tipo de inmueble" placeholder="Edificio, dúplex, etc." register={form.register('tipoInmueble')} />
           </div>
         </>
       )
-
     case 'topografia':
       return (
-        <div className="grid md:grid-cols-2 gap-4">
-          <div>
-            <Label htmlFor="ubicacion">Ubicación *</Label>
-            <Input id="ubicacion" {...form.register('ubicacion')} />
-          </div>
-          <div>
-            <Label htmlFor="tipoTrabajo">Tipo de trabajo</Label>
-            <Input id="tipoTrabajo" {...form.register('tipoTrabajo')} placeholder="Relevamiento, replanteo..." />
-          </div>
+        <div className="grid gap-4 md:grid-cols-2">
+          <FormField id="ubicacion" label="Ubicación" register={form.register('ubicacion')} error={error('ubicacion')} />
+          <FormField id="tipoTrabajo" label="Tipo de trabajo" placeholder="Relevamiento, replanteo..." register={form.register('tipoTrabajo')} />
         </div>
       )
-
     case 'amojonamientos':
       return (
         <>
-          <div className="grid md:grid-cols-2 gap-4">
-            <div>
-              <Label htmlFor="direccion">Dirección *</Label>
-              <Input id="direccion" {...form.register('direccion')} />
-            </div>
-            <div>
-              <Label htmlFor="partido">Partido *</Label>
-              <Input id="partido" {...form.register('partido')} />
-            </div>
+          <div className="grid gap-4 md:grid-cols-2">
+            <FormField id="direccion" label="Dirección" register={form.register('direccion')} error={error('direccion')} />
+            <FormField id="partido" label="Partido" register={form.register('partido')} error={error('partido')} />
           </div>
-          <div>
-            <Label htmlFor="cantidadMojones">Cantidad de mojones estimados</Label>
-            <Input id="cantidadMojones" {...form.register('cantidadMojones')} placeholder="Ej: 4 esquinas" />
-          </div>
+          <FormField id="cantidadMojones" label="Cantidad de mojones estimados" placeholder="Ej: 4 esquinas" register={form.register('cantidadMojones')} />
         </>
       )
-
     default:
       return null
   }
 }
 
-function formatWhatsAppMessage(data: any, servicio: ServicioSlug, title: string, documentoUrl?: string): string {
-  let mensaje = `*Consulta: ${title}*\n\n`
-  mensaje += `👤 *Nombre:* ${data.nombre}\n`
-  mensaje += `📧 *Email:* ${data.email}\n`
-  mensaje += `📱 *Teléfono:* ${data.telefono}\n\n`
+function formatWhatsAppMessage(data: any, title: string, pageUrl: string, documentoUrl?: string): string {
+  let mensaje = `*Consulta por servicio: ${title}*\n`
+  if (pageUrl) mensaje += `*Página:* ${pageUrl}\n`
+  mensaje += '\n'
 
-  // Agregar campos específicos
-  if (data.direccion) mensaje += `📍 *Dirección:* ${data.direccion}\n`
-  if (data.partido) mensaje += `🏘️ *Partido:* ${data.partido}\n`
-  if (data.ubicacion) mensaje += `📍 *Ubicación:* ${data.ubicacion}\n`
-  if (data.superficie) mensaje += `📏 *Superficie:* ${data.superficie}\n`
-  if (data.superficieTotal) mensaje += `📏 *Superficie total:* ${data.superficieTotal}\n`
-  if (data.aniosPosesion) mensaje += `⏳ *Años de posesión:* ${data.aniosPosesion}\n`
-  if (data.lotesDeseados) mensaje += `🏗️ *Lotes deseados:* ${data.lotesDeseados}\n`
-  if (data.cantidadUnidades) mensaje += `🏢 *Cantidad de unidades:* ${data.cantidadUnidades}\n`
-  if (data.tipoInmueble) mensaje += `🏠 *Tipo de inmueble:* ${data.tipoInmueble}\n`
-  if (data.tipoTrabajo) mensaje += `🔧 *Tipo de trabajo:* ${data.tipoTrabajo}\n`
-  if (data.cantidadMojones) mensaje += `📍 *Cantidad de mojones:* ${data.cantidadMojones}\n`
+  const fields: [string, string][] = [
+    ['Nombre', data.nombre],
+    ['Teléfono', data.telefono],
+    ['Dirección', data.direccion],
+    ['Partido', data.partido],
+    ['Ubicación', data.ubicacion],
+    ['Partida inmobiliaria', data.partida],
+    ['Nomenclatura catastral', data.nomenclatura],
+    ['Superficie aproximada', data.superficie],
+    ['Superficie total', data.superficieTotal],
+    ['Años de posesión', data.aniosPosesion],
+    ['Lotes deseados', data.lotesDeseados],
+    ['Cantidad de unidades', data.cantidadUnidades],
+    ['Tipo de inmueble', data.tipoInmueble],
+    ['Tipo de trabajo', data.tipoTrabajo],
+    ['Cantidad de mojones', data.cantidadMojones],
+  ]
 
-  if (data.mensaje) mensaje += `\n💬 *Mensaje:*\n${data.mensaje}`
+  fields.forEach(([label, value]) => {
+    if (value?.trim()) mensaje += `*${label}:* ${value.trim()}\n`
+  })
 
-  if (documentoUrl) {
-    mensaje += `\n\n📎 *Documento adjunto:*\n${documentoUrl}`
-  }
+  if (data.mensaje?.trim()) mensaje += `\n*Mensaje:*\n${data.mensaje.trim()}`
+  if (documentoUrl) mensaje += `\n\n*Documento adjunto:*\n${documentoUrl}`
 
-  return mensaje
+  return mensaje.trim()
 }

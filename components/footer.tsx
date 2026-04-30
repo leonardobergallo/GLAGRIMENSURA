@@ -3,6 +3,7 @@ import Image from "next/image"
 
 const instagramUrl = "https://www.instagram.com/glucero_agrimensor/"
 const facebookUrl = "https://www.facebook.com/agrimensor.gabriel.lucero"
+const whatsappUrl = "https://web.whatsapp.com/send?phone=5492212230052"
 
 export function Footer() {
   return (
@@ -49,12 +50,7 @@ export function Footer() {
                 </a>
               </li>
               <li>
-                <a href="mailto:agrimensorglucero@gmail.com" className="transition hover:text-white">
-                  Email
-                </a>
-              </li>
-              <li>
-                <a href="https://wa.me/5492212230052" className="transition hover:text-white">
+                <a href={whatsappUrl} target="_blank" rel="noopener noreferrer" className="transition hover:text-white">
                   WhatsApp
                 </a>
               </li>

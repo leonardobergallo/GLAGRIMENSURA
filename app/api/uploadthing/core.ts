@@ -32,7 +32,7 @@ export const ourFileRouter = {
   consultaDocumentos: f({ 
     pdf: { maxFileSize: "16MB", maxFileCount: 1 },
     image: { maxFileSize: "8MB", maxFileCount: 1 },
-    blob: { maxFileSize: "10MB", maxFileCount: 1 }
+    blob: { maxFileSize: "16MB", maxFileCount: 1 }
   })
     .onUploadComplete(async ({ file }) => {
       console.log("Documento de consulta subido:", file.url);

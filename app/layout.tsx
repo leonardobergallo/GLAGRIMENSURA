@@ -21,7 +21,7 @@ const poppins = Poppins({
 export const metadata: Metadata = {
   title: "GL Agrimensura | Ing. Gabriel Lucero - La Plata",
   description: "Servicios profesionales de agrimensura: mensuras, usucapión, subdivisión, propiedad horizontal, topografía y amojonamientos en La Plata y alrededores.",
-  keywords: ['agrimensor la plata', 'mensuras la plata', 'usucapion', 'subdivision', 'propiedad horizontal', 'topografia'],
+  keywords: ['agrimensor la plata', 'mensuras la plata', 'usucapión', 'subdivisión', 'propiedad horizontal', 'topografía'],
   generator: "v0.app",
   metadataBase: new URL('https://glagrimensura.com'),
   openGraph: {

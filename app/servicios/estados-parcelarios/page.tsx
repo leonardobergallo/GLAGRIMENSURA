@@ -10,13 +10,14 @@ import { ServicePhotosGallery } from '@/components/service-page/service-photos'
 import { getServicioBySlug } from '@/lib/servicios-data'
 
 export const metadata: Metadata = {
-  title: 'Subdivisión de Lotes | GL Agrimensura',
-  description: 'Dividí tu terreno de forma legal. Asesoramiento completo y trabajos técnicos para subdivisión.',
-  keywords: ['subdivision la plata', 'dividir terreno', 'subdivisión lote'],
+  title: 'Constitución de Estado Parcelario | GL Agrimensura',
+  description:
+    'Gestión de documentación técnica para ventas, escrituras y trámites catastrales.',
+  keywords: ['estado parcelario la plata', 'constitución de estado parcelario', 'agrimensor la plata'],
 }
 
-export default function SubdivisionPage() {
-  const servicio = getServicioBySlug('subdivision')
+export default function EstadosParcelariosPage() {
+  const servicio = getServicioBySlug('estados-parcelarios')
 
   if (!servicio) {
     return <div>Servicio no encontrado</div>
@@ -25,7 +26,7 @@ export default function SubdivisionPage() {
   return (
     <main className="min-h-screen bg-background">
       <Header />
-      
+
       <ServiceHero
         title={servicio.title}
         subtitle={servicio.subtitle}
@@ -38,9 +39,9 @@ export default function SubdivisionPage() {
 
       <ServiceBenefits benefits={servicio.benefits} />
 
-      <ServicePhotosGallery servicio="subdivision" />
+      <ServicePhotosGallery servicio="estados-parcelarios" />
 
-      <PlanosViewerDB servicio="subdivision" />
+      <PlanosViewerDB servicio="estados-parcelarios" />
 
       <ServiceForm servicio={servicio.slug} title={servicio.title} />
 

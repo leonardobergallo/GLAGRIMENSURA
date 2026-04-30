@@ -1,7 +1,7 @@
 'use client'
 
 import { Button } from '@/components/ui/button'
-import { Mail, MessageCircle } from 'lucide-react'
+import { MessageCircle } from 'lucide-react'
 import Image from 'next/image'
 
 interface ServiceHeroProps {
@@ -22,19 +22,15 @@ export function ServiceHero({
   phoneNumber = '5492212230052'
 }: ServiceHeroProps) {
   const handleWhatsApp = () => {
-    const encodedMessage = encodeURIComponent(whatsappMessage)
-    const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodedMessage}`
+    const pageUrl = typeof window !== 'undefined' ? window.location.href : ''
+    const message = `*Consulta por servicio: ${title}*\n${pageUrl ? `*Página:* ${pageUrl}\n` : ''}\n${whatsappMessage}`
+    const encodedMessage = encodeURIComponent(message)
+    const whatsappUrl = `https://web.whatsapp.com/send?phone=${phoneNumber}&text=${encodedMessage}`
     window.open(whatsappUrl, '_blank')
   }
 
-  const handleEmail = () => {
-    const subject = encodeURIComponent(`Consulta: ${title}`)
-    const body = encodeURIComponent(whatsappMessage)
-    window.location.href = `mailto:agrimensorglucero@gmail.com?subject=${subject}&body=${body}`
-  }
-
   return (
-    <div className="relative min-h-[70vh] flex items-center">
+    <div className="relative flex min-h-[70vh] items-center pt-24">
       {/* Imagen de fondo */}
       <div className="absolute inset-0 z-0">
         <Image
@@ -48,7 +44,7 @@ export function ServiceHero({
       </div>
 
       {/* Contenido */}
-      <div className="relative z-10 max-w-6xl mx-auto px-4 py-20">
+      <div className="relative z-10 mx-auto max-w-6xl px-4 py-20">
         <div className="max-w-2xl">
           <h1 className="text-5xl md:text-6xl font-bold text-white mb-4 font-heading">
             {title}
@@ -69,15 +65,6 @@ export function ServiceHero({
             >
               <MessageCircle className="mr-2 h-6 w-6" />
               Consultar por WhatsApp
-            </Button>
-            <Button
-              onClick={handleEmail}
-              variant="outline"
-              className="bg-white/10 hover:bg-white/20 text-white border-white/30 backdrop-blur-sm font-bold"
-              style={{ height: '56px', fontSize: '16px', paddingLeft: '32px', paddingRight: '32px' }}
-            >
-              <Mail className="mr-2 h-6 w-6" />
-              Enviar Email
             </Button>
           </div>
         </div>

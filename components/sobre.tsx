@@ -1,9 +1,28 @@
 import Image from "next/image"
 import { CheckCircle } from "lucide-react"
 
+const destacados = [
+  "Equipamiento GPS de alta precisión",
+  "Uso de Estación Total para mediciones de detalle",
+  "Levantamientos con dron: ortofotos y modelos digitales",
+  "Experiencia en mensuras urbanas y rurales",
+  "Especialización en deslindes y amojonamientos",
+  "Servicios aplicados al agro: monitoreo de cultivos y análisis de lotes",
+  "Rapidez operativa y cumplimiento de plazos",
+  "Asesoramiento técnico personalizado",
+  "Adaptación a proyectos de distintas escalas",
+]
+
+const equipo = [
+  "Gabriel Lucero - Ingeniero Agrimensor - Matrícula profesional CPA N° 2883",
+  "Ezequiel Heredia - Topógrafo especializado",
+  "Matias Avila - Maestro mayor de obra - Ingeniero Agrimensor",
+]
+
 export function Sobre() {
   return (
     <section id="sobre" className="relative overflow-hidden bg-gray-50 py-28">
+      <div className="absolute inset-0 bg-[url('/relieve-topografico.svg')] bg-[length:620px_360px] bg-center opacity-30" />
       <div className="absolute inset-0 opacity-15">
         <svg
           className="h-full w-full"
@@ -26,39 +45,45 @@ export function Sobre() {
         <div className="grid items-center gap-12 lg:grid-cols-2">
           <div>
             <h2 className="mb-6 text-5xl font-extrabold tracking-tight text-gray-900 md:text-6xl">
-              Sobre Gabriel Lucero
+              Sobre nosotros
             </h2>
             <div className="mb-8 space-y-5">
               <p className="text-xl leading-relaxed text-gray-700">
-                Ingeniero Agrimensor con matrícula profesional CPA N° 2883, con
-                amplia experiencia en relevamientos catastrales, mensuras y
-                servicios topográficos en La Plata y zona de influencia.
+                Somos un equipo especializado en agrimensura, topografía y servicios aplicados al agro, con amplia experiencia en relevamientos catastrales, mensuras, trabajos topográficos y servicios para la agroindustria en La Plata y zona de influencia, con alcance en toda la Provincia de Buenos Aires.
               </p>
               <p className="text-xl leading-relaxed text-gray-700">
-                Trabajo con equipamiento de última generación y técnicas modernas
-                para garantizar precisión y confiabilidad en cada proyecto.
+                Trabajamos con equipamiento de última generación y técnicas modernas, garantizando precisión, confiabilidad y respaldo técnico en cada proyecto.
+              </p>
+              <p className="text-xl leading-relaxed text-gray-700">
+                Acompañamos a particulares, profesionales y empresas, brindando soluciones técnicas adaptadas a cada necesidad.
               </p>
             </div>
 
-            <div className="mb-8 space-y-4">
-              {[
-                "Matrícula profesional CPA N° 2883",
-                "Equipamiento GPS de precisión",
-                "Experiencia en mensuras urbanas y rurales",
-                "Certificados en deslindes y amojonamientos",
-              ].map((item) => (
+            <div className="mb-8 grid gap-4 md:grid-cols-2">
+              {destacados.map((item) => (
                 <div key={item} className="flex items-start gap-3">
                   <CheckCircle className="mt-1 flex-shrink-0 text-amber-500" size={24} />
                   <span className="text-lg font-bold text-gray-800">{item}</span>
                 </div>
               ))}
             </div>
+
+            <div>
+              <h3 className="mb-3 text-2xl font-extrabold text-gray-900">Equipo profesional</h3>
+              <div className="space-y-2">
+                {equipo.map((item) => (
+                  <p key={item} className="text-lg font-semibold text-gray-800">
+                    {item}
+                  </p>
+                ))}
+              </div>
+            </div>
           </div>
 
-          <div className="relative h-[420px] overflow-hidden rounded-md bg-white shadow-2xl md:h-[520px]">
+          <div className="relative h-[420px] overflow-hidden rounded-md bg-white shadow-2xl md:h-[620px]">
             <Image
-              src="/sobre/agrimensura-ia.png"
-              alt="Equipamiento profesional de agrimensura en campo"
+              src="/FotoAlcostado.jpg"
+              alt="Equipo profesional de agrimensura trabajando en campo"
               fill
               className="object-cover"
             />

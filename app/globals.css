@@ -1,5 +1,6 @@
 @import "tailwindcss";
 @import "tw-animate-css";
+@import "@uploadthing/react/styles.css";
 
 @custom-variant dark (&:is(.dark *));
 
@@ -138,6 +139,27 @@
   font-weight: 700;
 }
 
+.hero-survey-scan {
+  animation: hero-survey-scan 6s ease-in-out infinite;
+  transform: translateX(-120%);
+}
+
+@keyframes hero-survey-scan {
+  0%,
+  18% {
+    transform: translateX(-120%);
+  }
+
+  55%,
+  72% {
+    transform: translateX(330%);
+  }
+
+  100% {
+    transform: translateX(330%);
+  }
+}
+
 .site-brand-text,
 .site-desktop-nav {
   display: none;
@@ -167,6 +189,3 @@
     display: none;
   }
 }
-
-/* Uploadthing Styles */
-@import "@uploadthing/react/styles.css";
