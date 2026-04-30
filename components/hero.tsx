@@ -24,7 +24,7 @@ export function Hero() {
         <div className="absolute inset-0 bg-[url('/relieve-topografico.svg')] bg-[length:620px_360px] bg-center opacity-45" />
       </div>
 
-      <div className="relative mx-auto flex min-h-[calc(100vh-7rem)] max-w-7xl flex-col items-center justify-center px-3 py-8 md:min-h-[calc(100vh-8rem)] md:px-6">
+      <div className="relative mx-auto flex min-h-[calc(100vh-7rem)] max-w-7xl flex-col items-center justify-center px-4 py-8 md:min-h-[calc(100vh-8rem)] md:px-6">
         <div className="sr-only">
           <h1>Ingeniero Agrimensor Gabriel Lucero</h1>
           <p>
@@ -35,34 +35,34 @@ export function Hero() {
           </p>
         </div>
 
-        <div className="relative w-full overflow-hidden rounded-md shadow-2xl shadow-slate-900/20 ring-1 ring-white/70">
-          <Image
-            src="/FotoBanner.jpg"
-            alt="Ingeniero Agrimensor Gabriel Lucero. Servicios en La Plata y Provincia de Buenos Aires."
-            width={2048}
-            height={1024}
-            priority
-            className="h-auto w-full object-contain contrast-110 saturate-110"
-          />
-          <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(90deg,rgba(15,23,42,0.20),transparent_34%,transparent_66%,rgba(15,23,42,0.16))]" />
-          <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.13)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.13)_1px,transparent_1px)] bg-[length:72px_72px] opacity-35" />
-          <div className="hero-survey-scan pointer-events-none absolute inset-y-0 left-0 w-1/3 bg-[linear-gradient(90deg,transparent,rgba(255,255,255,0.24),rgba(56,189,248,0.20),transparent)]" />
-          <div className="pointer-events-none absolute left-6 top-6 hidden h-24 w-24 rounded-full border border-white/45 md:block">
-            <div className="absolute left-1/2 top-0 h-full w-px -translate-x-1/2 bg-white/35" />
-            <div className="absolute left-0 top-1/2 h-px w-full -translate-y-1/2 bg-white/35" />
-            <div className="absolute inset-5 rounded-full border border-white/30" />
+        <div className="grid w-full items-center gap-8 lg:grid-cols-[0.8fr_1.2fr]">
+          <div className="flex justify-center lg:justify-start">
+            <div className="relative h-40 w-40 rounded-md bg-white/90 p-5 shadow-2xl shadow-slate-900/15 ring-1 ring-white md:h-52 md:w-52">
+              <Image
+                src="/logoGeoSudFix.png"
+                alt="Gabriel Lucero Agrimensura"
+                fill
+                priority
+                className="object-contain p-5"
+              />
+            </div>
           </div>
-          <div className="pointer-events-none absolute bottom-6 right-6 hidden items-end gap-2 text-white/80 md:flex">
-            <div className="h-16 w-px bg-white/55" />
-            <div className="h-10 w-px bg-white/45" />
-            <div className="h-20 w-px bg-white/65" />
-            <div className="h-7 w-px bg-white/40" />
-          </div>
-          <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-slate-950/85 via-slate-950/55 to-transparent px-5 pb-5 pt-16 text-center md:px-10 md:pb-8">
-            <p className="mx-auto max-w-5xl text-lg font-bold leading-relaxed text-white drop-shadow md:text-2xl">
-              Estados parcelarios, mensuras urbanas y rurales, deslindes, amojonamientos,
-              propiedad horizontal, usucapión y topografía de precisión para obras y agro.
-            </p>
+
+          <div className="relative overflow-hidden rounded-md border border-white/70 bg-white/88 p-6 text-center shadow-2xl shadow-slate-900/15 backdrop-blur-md md:p-9 lg:text-left">
+            <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(rgba(15,23,42,0.08)_1px,transparent_1px),linear-gradient(90deg,rgba(15,23,42,0.08)_1px,transparent_1px)] bg-[length:56px_56px]" />
+            <div className="hero-survey-scan pointer-events-none absolute inset-y-0 left-0 w-1/3 bg-[linear-gradient(90deg,transparent,rgba(56,189,248,0.18),transparent)]" />
+            <div className="relative">
+              <p className="mb-3 text-sm font-extrabold uppercase tracking-[0.22em] text-slate-600">
+                Agrimensura y topografía
+              </p>
+              <h1 className="mb-5 text-4xl font-extrabold leading-tight text-slate-950 md:text-6xl">
+                Gabriel Lucero
+              </h1>
+              <p className="max-w-3xl text-xl font-bold leading-relaxed text-slate-800 md:text-2xl">
+                Estados parcelarios, mensuras urbanas y rurales, deslindes, amojonamientos,
+                propiedad horizontal, usucapión y topografía de precisión para obras y agro.
+              </p>
+            </div>
           </div>
         </div>
 

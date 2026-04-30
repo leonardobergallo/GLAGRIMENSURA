@@ -144,7 +144,7 @@ export function Galeria() {
   const visibleIndices = getVisibleIndices()
 
   return (
-    <section id="galeria" className="relative overflow-hidden bg-gray-900 py-28">
+    <section id="galeria" className="relative overflow-hidden bg-gray-900 py-20">
       <div className="pointer-events-none absolute inset-0 opacity-10">
         <svg className="h-full w-full" viewBox="0 0 1000 400" preserveAspectRatio="xMidYMid slice">
           <path d="M0,100 C200,50 400,150 600,100 S800,50 1000,100" fill="none" stroke="white" strokeWidth="1.5" />
@@ -153,23 +153,23 @@ export function Galeria() {
         </svg>
       </div>
 
-      <div className="relative mx-auto max-w-[1500px] px-4">
-        <div className="mb-10 text-center">
-          <h2 className="mb-4 text-5xl font-extrabold text-white md:text-6xl">
+      <div className="relative mx-auto max-w-[1200px] px-4">
+        <div className="mb-8 text-center">
+          <h2 className="mb-3 text-4xl font-extrabold text-white md:text-5xl">
             Nuestros Trabajos
           </h2>
-          <p className="mx-auto max-w-3xl text-xl font-medium text-gray-300 md:text-2xl">
+          <p className="mx-auto max-w-3xl text-lg font-medium text-gray-300 md:text-xl">
             Proyectos realizados con precisión y profesionalismo
           </p>
         </div>
 
-        <div className="mb-12 flex flex-wrap justify-center gap-3">
+        <div className="mb-8 flex flex-wrap justify-center gap-3">
           {categorias.map((cat) => (
             <Button
               key={cat.id}
               variant={categoriaActiva === cat.id ? "default" : "outline"}
               onClick={() => setCategoriaActiva(cat.id)}
-              className={`rounded-full px-6 py-5 text-base font-bold transition-all ${
+              className={`rounded-full px-5 py-4 text-sm font-bold transition-all ${
                 categoriaActiva === cat.id
                   ? "border-amber-500 bg-amber-500 text-black hover:bg-amber-600"
                   : "border-gray-600 bg-transparent text-gray-300 hover:border-amber-500 hover:text-amber-500"
@@ -188,13 +188,13 @@ export function Galeria() {
           >
             <button
               onClick={prevSlide}
-              className="absolute left-1 top-1/2 z-10 flex h-14 w-14 -translate-y-1/2 items-center justify-center rounded-full bg-black/60 text-white backdrop-blur-sm transition-all hover:bg-amber-500 hover:text-black md:left-4"
+              className="absolute left-1 top-1/2 z-10 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-black/60 text-white backdrop-blur-sm transition-all hover:bg-amber-500 hover:text-black md:left-4"
               aria-label="Anterior"
             >
-              <ChevronLeft size={32} />
+              <ChevronLeft size={26} />
             </button>
 
-            <div className="flex items-center justify-center gap-4 px-12 md:gap-5 md:px-16">
+            <div className="flex items-center justify-center gap-4 px-10 md:px-14">
               {visibleIndices.map((index, i) => {
                 const item = imagenesFiltradas[index]
                 const isCenter =
@@ -207,8 +207,8 @@ export function Galeria() {
                     key={`${item.id}-${i}`}
                     className={`relative overflow-hidden rounded-md transition-all duration-500 ${
                       isCenter
-                        ? "h-[280px] w-full scale-100 opacity-100 shadow-2xl md:h-[430px] md:w-[760px] lg:h-[500px] lg:w-[920px]"
-                        : "hidden h-[210px] w-[330px] scale-95 opacity-65 md:block lg:h-[250px] lg:w-[390px]"
+                        ? "h-[170px] w-full scale-100 opacity-100 shadow-2xl md:h-[240px] md:w-[430px] lg:h-[280px] lg:w-[520px]"
+                        : "hidden h-[135px] w-[210px] scale-95 opacity-65 md:block lg:h-[160px] lg:w-[250px]"
                     }`}
                   >
                     <Image
@@ -219,10 +219,10 @@ export function Galeria() {
                       priority={isCenter}
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/15 to-transparent">
-                      <div className="absolute bottom-5 left-5 right-5">
+                      <div className="absolute bottom-4 left-4 right-4">
                         <Badge
                           className={`bg-amber-500 font-bold text-black ${
-                            isCenter ? "px-4 py-2 text-base" : "text-xs"
+                            isCenter ? "px-3 py-1.5 text-sm" : "text-xs"
                           }`}
                         >
                           {item.etiqueta}
@@ -236,10 +236,10 @@ export function Galeria() {
 
             <button
               onClick={nextSlide}
-              className="absolute right-1 top-1/2 z-10 flex h-14 w-14 -translate-y-1/2 items-center justify-center rounded-full bg-black/60 text-white backdrop-blur-sm transition-all hover:bg-amber-500 hover:text-black md:right-4"
+              className="absolute right-1 top-1/2 z-10 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-black/60 text-white backdrop-blur-sm transition-all hover:bg-amber-500 hover:text-black md:right-4"
               aria-label="Siguiente"
             >
-              <ChevronRight size={32} />
+              <ChevronRight size={26} />
             </button>
           </div>
         ) : (
@@ -249,7 +249,7 @@ export function Galeria() {
         )}
 
         {imagenesFiltradas.length > 0 && (
-          <div className="mt-9 flex justify-center gap-2">
+          <div className="mt-7 flex justify-center gap-2">
             {imagenesFiltradas.map((_, index) => (
               <button
                 key={index}
