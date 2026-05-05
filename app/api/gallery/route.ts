@@ -58,6 +58,42 @@ export async function POST(request: NextRequest) {
   }
 }
 
+export async function PUT(request: NextRequest) {
+  try {
+    const body = await request.json()
+    const { id, category, title, description, imageUrl, thumbnailUrl, orden } = body
+
+    if (!id || !category || !title || !imageUrl) {
+      return NextResponse.json(
+        { error: "Faltan campos requeridos: id, category, title, imageUrl" },
+        { status: 400 }
+      )
+    }
+
+    const [item] = await db
+      .update(galleryItems)
+      .set({
+        category,
+        title,
+        description,
+        imageUrl,
+        thumbnailUrl,
+        orden: orden || 0,
+        updatedAt: new Date(),
+      })
+      .where(eq(galleryItems.id, Number(id)))
+      .returning()
+
+    return NextResponse.json({ item })
+  } catch (error) {
+    console.error("Error al actualizar imagen de galerÃ­a:", error)
+    return NextResponse.json(
+      { error: "Error al actualizar imagen de galerÃ­a" },
+      { status: 500 }
+    )
+  }
+}
+
 export async function DELETE(request: NextRequest) {
   const { searchParams } = new URL(request.url)
   const id = searchParams.get("id")

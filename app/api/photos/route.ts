@@ -58,6 +58,40 @@ export async function POST(request: NextRequest) {
   }
 }
 
+// PUT - Actualizar foto
+export async function PUT(request: NextRequest) {
+  try {
+    const body = await request.json();
+    const { id, servicioSlug, title, description, imageUrl, thumbnailUrl, orden } = body;
+
+    if (!id || !servicioSlug || !title || !imageUrl) {
+      return NextResponse.json(
+        { error: 'Faltan campos requeridos: id, servicioSlug, title, imageUrl' },
+        { status: 400 }
+      );
+    }
+
+    const [photo] = await db
+      .update(servicePhotos)
+      .set({
+        servicioSlug,
+        title,
+        description,
+        imageUrl,
+        thumbnailUrl,
+        orden: orden || 0,
+        updatedAt: new Date(),
+      })
+      .where(eq(servicePhotos.id, parseInt(id)))
+      .returning();
+
+    return NextResponse.json({ photo });
+  } catch (error) {
+    console.error('Error al actualizar foto:', error);
+    return NextResponse.json({ error: 'Error al actualizar foto' }, { status: 500 });
+  }
+}
+
 // DELETE - Eliminar foto
 export async function DELETE(request: NextRequest) {
   const { searchParams } = new URL(request.url);

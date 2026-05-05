@@ -59,6 +59,41 @@ export async function POST(request: NextRequest) {
   }
 }
 
+// PUT - Actualizar plano
+export async function PUT(request: NextRequest) {
+  try {
+    const body = await request.json();
+    const { id, servicioSlug, title, description, fileUrl, fileType, thumbnailUrl, orden } = body;
+
+    if (!id || !servicioSlug || !title || !fileUrl || !fileType) {
+      return NextResponse.json(
+        { error: 'Faltan campos requeridos: id, servicioSlug, title, fileUrl, fileType' },
+        { status: 400 }
+      );
+    }
+
+    const [plano] = await db
+      .update(planos)
+      .set({
+        servicioSlug,
+        title,
+        description,
+        fileUrl,
+        fileType,
+        thumbnailUrl,
+        orden: orden || 0,
+        updatedAt: new Date(),
+      })
+      .where(eq(planos.id, parseInt(id)))
+      .returning();
+
+    return NextResponse.json({ plano });
+  } catch (error) {
+    console.error('Error al actualizar plano:', error);
+    return NextResponse.json({ error: 'Error al actualizar plano' }, { status: 500 });
+  }
+}
+
 // DELETE - Eliminar plano
 export async function DELETE(request: NextRequest) {
   const { searchParams } = new URL(request.url);
