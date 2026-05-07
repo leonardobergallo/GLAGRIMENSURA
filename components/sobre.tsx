@@ -21,8 +21,8 @@ const equipo = [
 
 export function Sobre() {
   return (
-    <section id="sobre" className="relative overflow-hidden bg-gray-50 py-28">
-      <div className="absolute inset-0 bg-[url('/relieve-topografico.svg')] bg-[length:620px_360px] bg-center opacity-30" />
+    <section id="sobre" className="relative overflow-hidden bg-white py-24">
+      <div className="absolute inset-0 bg-[url('/relieve-topografico.svg')] bg-[length:620px_360px] bg-center opacity-20" />
       <div className="absolute inset-0 opacity-15">
         <svg
           className="h-full w-full"
@@ -67,17 +67,6 @@ export function Sobre() {
                 </div>
               ))}
             </div>
-
-            <div>
-              <h3 className="mb-3 text-2xl font-extrabold text-gray-900">Equipo profesional</h3>
-              <div className="space-y-2">
-                {equipo.map((item) => (
-                  <p key={item} className="text-lg font-semibold text-gray-800">
-                    {item}
-                  </p>
-                ))}
-              </div>
-            </div>
           </div>
 
           <div className="relative h-[420px] overflow-hidden rounded-md bg-white shadow-2xl md:h-[620px]">
@@ -87,6 +76,17 @@ export function Sobre() {
               fill
               className="object-cover"
             />
+          </div>
+        </div>
+
+        <div className="mx-auto mt-14 max-w-4xl text-center">
+          <h3 className="mb-3 text-2xl font-extrabold text-gray-900">Equipo profesional</h3>
+          <div className="space-y-2">
+            {equipo.map((item) => (
+              <p key={item} className="text-lg font-semibold text-gray-800">
+                {item}
+              </p>
+            ))}
           </div>
         </div>
       </div>

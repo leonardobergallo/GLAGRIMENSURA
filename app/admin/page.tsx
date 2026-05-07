@@ -17,7 +17,7 @@ import {
 } from "@/components/ui/select"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Textarea } from "@/components/ui/textarea"
-import { UploadButton } from "@/lib/uploadthing"
+import { UploadButton, UploadDropzone } from "@/lib/uploadthing"
 
 const servicios = [
   { slug: "estados-parcelarios", nombre: "Estados parcelarios" },
@@ -29,12 +29,7 @@ const servicios = [
   { slug: "amojonamientos", nombre: "Amojonamientos" },
 ]
 
-const categoriasCarrusel = [
-  { slug: "urbano", nombre: "Urbano" },
-  { slug: "rural", nombre: "Rural" },
-  { slug: "gps", nombre: "GPS/Topografia" },
-  { slug: "equipos", nombre: "Equipos" },
-]
+const DEFAULT_GALLERY_CATEGORY = "todos"
 
 type GalleryItem = {
   id: number
@@ -67,12 +62,15 @@ type Plano = {
   orden: number | null
 }
 
-function getServicioName(slug: string) {
-  return servicios.find((servicio) => servicio.slug === slug)?.nombre || slug
+type PendingUpload = {
+  url: string
+  name: string
+  title: string
+  comment: string
 }
 
-function getCategoryName(slug: string) {
-  return categoriasCarrusel.find((categoria) => categoria.slug === slug)?.nombre || slug
+function getServicioName(slug: string) {
+  return servicios.find((servicio) => servicio.slug === slug)?.nombre || slug
 }
 
 function EmptyState({ text }: { text: string }) {
@@ -87,29 +85,30 @@ function ImagePreview({
   title,
   description,
   imageUrl,
-  badge,
 }: {
-  title: string
+  title?: string
   description?: string
   imageUrl: string
-  badge: string
 }) {
   return (
     <div className="overflow-hidden rounded-md border bg-white">
       <div className="relative aspect-video bg-gray-100">
         <img
           src={imageUrl}
-          alt={title || "Vista previa"}
-          className="h-full w-full object-cover"
+          alt={description || "Vista previa"}
+          className="h-full w-full object-contain"
         />
-        <Badge className="absolute left-3 top-3 bg-amber-500 text-black">{badge}</Badge>
       </div>
       <div className="space-y-1 p-4">
-        <h3 className="font-semibold">{title || "Sin titulo todavia"}</h3>
+        {title ? (
+          <h3 className="font-semibold text-gray-900">{title}</h3>
+        ) : (
+          <h3 className="font-semibold text-gray-400">Sin titulo</h3>
+        )}
         {description ? (
           <p className="text-sm text-gray-600">{description}</p>
         ) : (
-          <p className="text-sm text-gray-400">Sin descripcion</p>
+          <p className="text-sm text-gray-400">Sin comentario</p>
         )}
       </div>
     </div>
@@ -174,6 +173,7 @@ export default function AdminPage() {
   const [photoTitle, setPhotoTitle] = useState("")
   const [photoDescription, setPhotoDescription] = useState("")
   const [photoUrl, setPhotoUrl] = useState("")
+  const [photoUploads, setPhotoUploads] = useState<PendingUpload[]>([])
   const [editingPhotoId, setEditingPhotoId] = useState<number | null>(null)
   const [photos, setPhotos] = useState<ServicePhoto[]>([])
 
@@ -184,10 +184,10 @@ export default function AdminPage() {
   const [editingPlanoId, setEditingPlanoId] = useState<number | null>(null)
   const [planos, setPlanos] = useState<Plano[]>([])
 
-  const [galleryCategory, setGalleryCategory] = useState("")
   const [galleryTitle, setGalleryTitle] = useState("")
   const [galleryDescription, setGalleryDescription] = useState("")
   const [galleryUrl, setGalleryUrl] = useState("")
+  const [galleryUploads, setGalleryUploads] = useState<PendingUpload[]>([])
   const [editingGalleryId, setEditingGalleryId] = useState<number | null>(null)
   const [galleryItems, setGalleryItems] = useState<GalleryItem[]>([])
 
@@ -233,7 +233,7 @@ export default function AdminPage() {
     setGalleryTitle("")
     setGalleryDescription("")
     setGalleryUrl("")
-    setGalleryCategory("")
+    setGalleryUploads([])
     setEditingGalleryId(null)
   }
 
@@ -241,6 +241,7 @@ export default function AdminPage() {
     setPhotoTitle("")
     setPhotoDescription("")
     setPhotoUrl("")
+    setPhotoUploads([])
     setEditingPhotoId(null)
   }
 
@@ -253,26 +254,43 @@ export default function AdminPage() {
   }
 
   const handleSaveGalleryImage = async () => {
-    if (!galleryCategory || !galleryTitle || !galleryUrl) {
-      alert("Por favor completa categoria, titulo e imagen")
+    if ((!editingGalleryId && galleryUploads.length === 0) || (editingGalleryId && !galleryUrl)) {
+      alert("Por favor subi al menos una imagen")
       return
     }
 
     try {
-      const response = await fetch("/api/gallery", {
-        method: editingGalleryId ? "PUT" : "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          id: editingGalleryId,
-          category: galleryCategory,
-          title: galleryTitle,
-          description: galleryDescription,
-          imageUrl: galleryUrl,
-        }),
-      })
+      const requests = editingGalleryId
+        ? [
+            fetch("/api/gallery", {
+              method: "PUT",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                id: editingGalleryId,
+                category: DEFAULT_GALLERY_CATEGORY,
+                title: galleryTitle || galleryDescription || "Trabajo realizado",
+                description: galleryDescription,
+                imageUrl: galleryUrl,
+              }),
+            }),
+          ]
+        : galleryUploads.map((upload, index) =>
+            fetch("/api/gallery", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                category: DEFAULT_GALLERY_CATEGORY,
+                title: upload.title || upload.name || `Trabajo ${index + 1}`,
+                description: upload.comment,
+                imageUrl: upload.url,
+              }),
+            })
+          )
 
-      if (response.ok) {
-        alert(editingGalleryId ? "Imagen actualizada." : "Imagen agregada al carrusel principal.")
+      const responses = await Promise.all(requests)
+
+      if (responses.every((response) => response.ok)) {
+        alert(editingGalleryId ? "Imagen actualizada." : "Imagenes agregadas al carrusel principal.")
         clearGalleryForm()
         fetchGallery()
       } else {
@@ -285,26 +303,43 @@ export default function AdminPage() {
   }
 
   const handleSavePhoto = async () => {
-    if (!selectedServicio || !photoTitle || !photoUrl) {
-      alert("Por favor completa todos los campos requeridos")
+    if (!selectedServicio || (!editingPhotoId && photoUploads.length === 0) || (editingPhotoId && !photoUrl)) {
+      alert("Por favor selecciona un servicio y subi al menos una foto")
       return
     }
 
     try {
-      const response = await fetch("/api/photos", {
-        method: editingPhotoId ? "PUT" : "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          id: editingPhotoId,
-          servicioSlug: selectedServicio,
-          title: photoTitle,
-          description: photoDescription,
-          imageUrl: photoUrl,
-        }),
-      })
+      const requests = editingPhotoId
+        ? [
+            fetch("/api/photos", {
+              method: "PUT",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                id: editingPhotoId,
+                servicioSlug: selectedServicio,
+                title: photoTitle || photoDescription || "Foto de trabajo",
+                description: photoDescription,
+                imageUrl: photoUrl,
+              }),
+            }),
+          ]
+        : photoUploads.map((upload, index) =>
+            fetch("/api/photos", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                servicioSlug: selectedServicio,
+                title: upload.title || upload.name || `Foto ${index + 1}`,
+                description: upload.comment,
+                imageUrl: upload.url,
+              }),
+            })
+          )
 
-      if (response.ok) {
-        alert(editingPhotoId ? "Foto actualizada." : "Foto guardada exitosamente.")
+      const responses = await Promise.all(requests)
+
+      if (responses.every((response) => response.ok)) {
+        alert(editingPhotoId ? "Foto actualizada." : "Fotos guardadas exitosamente.")
         clearPhotoForm()
         fetchPhotos(selectedServicio)
       } else {
@@ -392,67 +427,76 @@ export default function AdminPage() {
                 <CardContent className="grid gap-6 lg:grid-cols-[1fr_320px]">
                   <div className="space-y-4">
                     <div>
-                      <Label>Categoria *</Label>
-                      <Select value={galleryCategory} onValueChange={setGalleryCategory}>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Selecciona una categoria" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {categoriasCarrusel.map((categoria) => (
-                            <SelectItem key={categoria.slug} value={categoria.slug}>
-                              {categoria.nombre}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
-
-                    <div>
-                      <Label>Archivo</Label>
+                      <Label>Fotos</Label>
                       <div className="mt-2">
-                        <UploadButton
-                          endpoint="galleryImages"
-                          onClientUploadComplete={(res: any) => {
-                            if (res?.[0]?.url) {
-                              setGalleryUrl(res[0].url)
-                              alert("Imagen subida. Revisala en la vista previa antes de guardar.")
-                            }
-                          }}
-                          onUploadError={(error: Error) => {
-                            alert(`Error: ${error.message}`)
-                          }}
-                        />
+                        {editingGalleryId ? (
+                          <UploadButton
+                            endpoint="galleryImages"
+                            onClientUploadComplete={(res: any) => {
+                              if (res?.[0]?.url) {
+                                setGalleryUrl(res[0].url)
+                                alert("Imagen subida. Revisala en la vista previa antes de guardar.")
+                              }
+                            }}
+                            onUploadError={(error: Error) => {
+                              alert(`Error: ${error.message}`)
+                            }}
+                          />
+                        ) : (
+                          <UploadDropzone
+                            endpoint="galleryImages"
+                            onClientUploadComplete={(res: any) => {
+                              const uploads = (res || [])
+                                .filter((file: any) => file?.url)
+                                .map((file: any) => ({
+                                  url: file.url,
+                                  name: file.name || "Imagen",
+                                  title: "",
+                                  comment: "",
+                                }))
+                              setGalleryUploads((current) => [...current, ...uploads])
+                              alert("Imagenes subidas. Agrega los comentarios y publicalas.")
+                            }}
+                            onUploadError={(error: Error) => {
+                              alert(`Error: ${error.message}`)
+                            }}
+                          />
+                        )}
                       </div>
-                      {galleryUrl && <p className="mt-2 truncate text-xs text-gray-500">{galleryUrl}</p>}
                     </div>
 
-                    <div>
-                      <Label htmlFor="gallery-title">Titulo *</Label>
-                      <Input
-                        id="gallery-title"
-                        value={galleryTitle}
-                        onChange={(e) => setGalleryTitle(e.target.value)}
-                        placeholder="Ej: Relevamiento topografico en La Plata"
-                      />
-                    </div>
-
-                    <div>
-                      <Label htmlFor="gallery-description">Descripcion</Label>
-                      <Textarea
-                        id="gallery-description"
-                        value={galleryDescription}
-                        onChange={(e) => setGalleryDescription(e.target.value)}
-                        placeholder="Descripcion opcional de la imagen"
-                      />
-                    </div>
+                    {editingGalleryId && (
+                      <div className="space-y-4">
+                        <div>
+                          <Label htmlFor="gallery-title">Titulo</Label>
+                          <Input
+                            id="gallery-title"
+                            value={galleryTitle}
+                            onChange={(e) => setGalleryTitle(e.target.value)}
+                            placeholder="Titulo de la foto"
+                          />
+                        </div>
+                        <div>
+                          <Label htmlFor="gallery-description">Comentario</Label>
+                          <Textarea
+                            id="gallery-description"
+                            value={galleryDescription}
+                            onChange={(e) => setGalleryDescription(e.target.value)}
+                            placeholder="Comentario opcional de la imagen"
+                          />
+                        </div>
+                      </div>
+                    )}
 
                     <div className="flex gap-2">
                       <Button
                         onClick={handleSaveGalleryImage}
-                        disabled={!galleryCategory || !galleryTitle || !galleryUrl}
+                        disabled={
+                          editingGalleryId ? !galleryUrl : galleryUploads.length === 0
+                        }
                         className="flex-1"
                       >
-                        {editingGalleryId ? "Guardar cambios" : "Publicar en carrusel"}
+                        {editingGalleryId ? "Guardar cambios" : "Publicar fotos"}
                       </Button>
                       {editingGalleryId && (
                         <Button variant="outline" onClick={clearGalleryForm}>
@@ -466,15 +510,50 @@ export default function AdminPage() {
                   <div>
                     <Label>Vista previa antes de publicar</Label>
                     <div className="mt-2">
-                      {galleryUrl ? (
+                      {editingGalleryId && galleryUrl ? (
                         <ImagePreview
                           title={galleryTitle}
                           description={galleryDescription}
                           imageUrl={galleryUrl}
-                          badge={galleryCategory ? getCategoryName(galleryCategory) : "Sin categoria"}
                         />
+                      ) : galleryUploads.length > 0 ? (
+                        <div className="space-y-4">
+                          {galleryUploads.map((upload, index) => (
+                            <div key={`${upload.url}-${index}`} className="space-y-2">
+                              <ImagePreview
+                                title={upload.title}
+                                description={upload.comment}
+                                imageUrl={upload.url}
+                              />
+                              <Input
+                                value={upload.title}
+                                onChange={(event) => {
+                                  const title = event.target.value
+                                  setGalleryUploads((current) =>
+                                    current.map((item, itemIndex) =>
+                                      itemIndex === index ? { ...item, title } : item
+                                    )
+                                  )
+                                }}
+                                placeholder="Titulo para esta foto"
+                              />
+                              <Textarea
+                                value={upload.comment}
+                                onChange={(event) => {
+                                  const comment = event.target.value
+                                  setGalleryUploads((current) =>
+                                    current.map((item, itemIndex) =>
+                                      itemIndex === index ? { ...item, comment } : item
+                                    )
+                                  )
+                                }}
+                                placeholder="Comentario para esta foto"
+                              />
+                            </div>
+                          ))}
+                        </div>
                       ) : (
-                        <EmptyState text="Cuando subas una imagen, aca vas a ver como quedaria antes de publicarla." />
+                        <EmptyState text="Cuando subas imagenes, aca vas a ver como quedarian antes de publicarlas." />
                       )}
                     </div>
                   </div>
@@ -496,7 +575,6 @@ export default function AdminPage() {
                           title={item.title}
                           description={item.description || ""}
                           imageUrl={item.thumbnailUrl || item.imageUrl}
-                          badge={getCategoryName(item.category)}
                         />
                       ))}
                     </div>
@@ -561,51 +639,77 @@ export default function AdminPage() {
                 <CardContent className="grid gap-6 lg:grid-cols-[1fr_320px]">
                   <div className="space-y-4">
                     <div>
-                      <Label>Archivo</Label>
+                      <Label>Fotos</Label>
                       <div className="mt-2">
-                        <UploadButton
-                          endpoint="servicePhotos"
-                          onClientUploadComplete={(res: any) => {
-                            if (res?.[0]?.url) {
-                              setPhotoUrl(res[0].url)
-                              alert("Imagen subida. Revisala en la vista previa antes de guardar.")
-                            }
-                          }}
-                          onUploadError={(error: Error) => {
-                            alert(`Error: ${error.message}`)
-                          }}
-                        />
+                        {editingPhotoId ? (
+                          <UploadButton
+                            endpoint="servicePhotos"
+                            onClientUploadComplete={(res: any) => {
+                              if (res?.[0]?.url) {
+                                setPhotoUrl(res[0].url)
+                                alert("Imagen subida. Revisala en la vista previa antes de guardar.")
+                              }
+                            }}
+                            onUploadError={(error: Error) => {
+                              alert(`Error: ${error.message}`)
+                            }}
+                          />
+                        ) : (
+                          <UploadDropzone
+                            endpoint="servicePhotos"
+                            onClientUploadComplete={(res: any) => {
+                              const uploads = (res || [])
+                                .filter((file: any) => file?.url)
+                                .map((file: any) => ({
+                                  url: file.url,
+                                  name: file.name || "Foto",
+                                  title: "",
+                                  comment: "",
+                                }))
+                              setPhotoUploads((current) => [...current, ...uploads])
+                              alert("Fotos subidas. Agrega los comentarios y publicalas.")
+                            }}
+                            onUploadError={(error: Error) => {
+                              alert(`Error: ${error.message}`)
+                            }}
+                          />
+                        )}
                       </div>
-                      {photoUrl && <p className="mt-2 truncate text-xs text-gray-500">{photoUrl}</p>}
                     </div>
 
-                    <div>
-                      <Label htmlFor="photo-title">Titulo *</Label>
-                      <Input
-                        id="photo-title"
-                        value={photoTitle}
-                        onChange={(e) => setPhotoTitle(e.target.value)}
-                        placeholder="Ej: Mensura en zona urbana"
-                      />
-                    </div>
-
-                    <div>
-                      <Label htmlFor="photo-description">Descripcion</Label>
-                      <Textarea
-                        id="photo-description"
-                        value={photoDescription}
-                        onChange={(e) => setPhotoDescription(e.target.value)}
-                        placeholder="Descripcion opcional de la foto"
-                      />
-                    </div>
+                    {editingPhotoId && (
+                      <div className="space-y-4">
+                        <div>
+                          <Label htmlFor="photo-title">Titulo</Label>
+                          <Input
+                            id="photo-title"
+                            value={photoTitle}
+                            onChange={(e) => setPhotoTitle(e.target.value)}
+                            placeholder="Titulo de la foto"
+                          />
+                        </div>
+                        <div>
+                          <Label htmlFor="photo-description">Comentario</Label>
+                          <Textarea
+                            id="photo-description"
+                            value={photoDescription}
+                            onChange={(e) => setPhotoDescription(e.target.value)}
+                            placeholder="Comentario opcional de la foto"
+                          />
+                        </div>
+                      </div>
+                    )}
 
                     <div className="flex gap-2">
                       <Button
                         onClick={handleSavePhoto}
-                        disabled={!selectedServicio || !photoTitle || !photoUrl}
+                        disabled={
+                          !selectedServicio ||
+                          (editingPhotoId ? !photoUrl : photoUploads.length === 0)
+                        }
                         className="flex-1"
                       >
-                        {editingPhotoId ? "Guardar cambios" : "Publicar foto"}
+                        {editingPhotoId ? "Guardar cambios" : "Publicar fotos"}
                       </Button>
                       {editingPhotoId && (
                         <Button variant="outline" onClick={clearPhotoForm}>
@@ -619,15 +723,50 @@ export default function AdminPage() {
                   <div>
                     <Label>Vista previa antes de publicar</Label>
                     <div className="mt-2">
-                      {photoUrl ? (
+                      {editingPhotoId && photoUrl ? (
                         <ImagePreview
                           title={photoTitle}
                           description={photoDescription}
                           imageUrl={photoUrl}
-                          badge={selectedServicio ? getServicioName(selectedServicio) : "Sin servicio"}
                         />
+                      ) : photoUploads.length > 0 ? (
+                        <div className="space-y-4">
+                          {photoUploads.map((upload, index) => (
+                            <div key={`${upload.url}-${index}`} className="space-y-2">
+                              <ImagePreview
+                                title={upload.title}
+                                description={upload.comment}
+                                imageUrl={upload.url}
+                              />
+                              <Input
+                                value={upload.title}
+                                onChange={(event) => {
+                                  const title = event.target.value
+                                  setPhotoUploads((current) =>
+                                    current.map((item, itemIndex) =>
+                                      itemIndex === index ? { ...item, title } : item
+                                    )
+                                  )
+                                }}
+                                placeholder="Titulo para esta foto"
+                              />
+                              <Textarea
+                                value={upload.comment}
+                                onChange={(event) => {
+                                  const comment = event.target.value
+                                  setPhotoUploads((current) =>
+                                    current.map((item, itemIndex) =>
+                                      itemIndex === index ? { ...item, comment } : item
+                                    )
+                                  )
+                                }}
+                                placeholder="Comentario para esta foto"
+                              />
+                            </div>
+                          ))}
+                        </div>
                       ) : (
-                        <EmptyState text="Cuando subas una foto, aca vas a ver como quedaria en el servicio." />
+                        <EmptyState text="Cuando subas fotos, aca vas a ver como quedarian en el servicio." />
                       )}
                     </div>
                   </div>
@@ -651,7 +790,6 @@ export default function AdminPage() {
                             title={photo.title}
                             description={photo.description || ""}
                             imageUrl={photo.thumbnailUrl || photo.imageUrl}
-                            badge={getServicioName(photo.servicioSlug)}
                           />
                           <div className="flex gap-2">
                             <Button

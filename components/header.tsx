@@ -43,11 +43,11 @@ export function Header() {
   ]
 
   return (
-    <header className="fixed left-0 right-0 top-0 z-50 border-b-2 border-slate-300 bg-white shadow-lg shadow-slate-900/10">
-      <div className="relative mx-auto flex max-w-[1500px] flex-col items-center px-4 py-2">
-        <div className="flex w-full items-center justify-between">
+    <header className="fixed left-0 right-0 top-0 z-50 border-b border-slate-200 bg-white shadow-md shadow-slate-900/5">
+      <div className="relative mx-auto flex max-w-[1500px] items-center justify-between gap-4 px-4 py-2">
+        <div className="flex w-full min-w-0 items-center justify-between lg:w-auto">
           <Link href="/" className="flex min-w-0 items-center gap-3 transition-opacity hover:opacity-85">
-            <div className="relative h-14 w-14 flex-shrink-0 md:h-16 md:w-16">
+            <div className="relative h-12 w-12 flex-shrink-0 md:h-14 md:w-14">
               <Image
                 src="/logoGeoSudFix.png"
                 alt="Gabriel Lucero Agrimensura"
@@ -57,10 +57,10 @@ export function Header() {
               />
             </div>
             <div className="site-brand-text min-w-0">
-              <p className="text-lg font-extrabold leading-tight text-slate-950 md:text-xl">
+              <p className="font-heading text-lg font-extrabold leading-tight text-black md:text-xl">
                 Gabriel Lucero
               </p>
-              <p className="text-xs font-extrabold uppercase tracking-wide text-slate-600 md:text-sm">
+              <p className="font-heading text-xs font-extrabold uppercase tracking-wide text-black md:text-sm">
                 Ingeniero Agrimensor
               </p>
             </div>
@@ -75,19 +75,13 @@ export function Header() {
           </button>
         </div>
 
-        <nav className="site-desktop-nav mt-2 w-full items-center justify-center gap-3 border-t border-slate-300 pt-2 lg:gap-5">
+        <nav className="site-desktop-nav items-center justify-end gap-2 lg:gap-4">
           {navLinks.map((link) => {
-            const isPrimary = link.section === "servicios" || link.section === "contacto"
-
             return (
               <button
                 key={link.section}
                 onClick={() => handleNavigation(link.section)}
-                className={`rounded-md border px-4 py-3 text-sm font-extrabold tracking-wide shadow-sm transition-colors lg:px-6 lg:text-base ${
-                  isPrimary
-                    ? "border-slate-950 bg-slate-950 text-white hover:bg-slate-700"
-                    : "border-slate-300 bg-white text-slate-950 hover:border-slate-500 hover:bg-slate-100"
-                }`}
+                className="rounded-md border border-slate-300 bg-white px-4 py-2.5 font-heading text-sm font-extrabold tracking-wide text-black shadow-sm transition-colors hover:border-slate-600 hover:bg-slate-100 lg:px-5"
               >
                 {link.label}
               </button>
@@ -103,7 +97,7 @@ export function Header() {
               <button
                 key={link.section}
                 onClick={() => handleNavigation(link.section)}
-                className="px-6 py-4 text-left text-lg font-extrabold tracking-wide text-slate-900 transition-colors hover:bg-slate-100"
+                className="px-6 py-4 text-left font-heading text-lg font-extrabold tracking-wide text-black transition-colors hover:bg-slate-100"
               >
                 {link.label}
               </button>

@@ -5,7 +5,7 @@ const f = createUploadthing();
 
 export const ourFileRouter = {
   // Endpoint para subir fotos de servicios
-  servicePhotos: f({ image: { maxFileSize: "4MB", maxFileCount: 10 } })
+  servicePhotos: f({ image: { maxFileSize: "4MB", maxFileCount: 50 } })
     .onUploadComplete(async ({ file }) => {
       console.log("Foto subida:", file.url);
       return { url: file.url };
@@ -22,7 +22,7 @@ export const ourFileRouter = {
     }),
 
   // Endpoint para galería general
-  galleryImages: f({ image: { maxFileSize: "4MB", maxFileCount: 20 } })
+  galleryImages: f({ image: { maxFileSize: "4MB", maxFileCount: 50 } })
     .onUploadComplete(async ({ file }) => {
       console.log("Imagen de galería subida:", file.url);
       return { url: file.url };

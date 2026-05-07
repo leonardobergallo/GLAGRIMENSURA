@@ -10,21 +10,20 @@ export function Hero() {
   }
 
   return (
-    <section className="relative min-h-screen overflow-hidden bg-slate-100 pt-28 md:pt-32">
+    <section className="relative min-h-screen overflow-hidden bg-white pt-20 md:pt-24">
       <div className="absolute inset-0">
         <Image
           src="/FotoBanner.jpg"
           alt=""
           fill
           priority
-          className="scale-110 object-cover opacity-60 blur-sm saturate-125"
+          className="scale-105 object-cover opacity-75 saturate-125"
         />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.24),rgba(15,23,42,0.42)),linear-gradient(120deg,rgba(248,250,252,0.55),rgba(148,163,184,0.18),rgba(15,23,42,0.30))]" />
-        <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.20),rgba(255,255,255,0.54))]" />
-        <div className="absolute inset-0 bg-[url('/relieve-topografico.svg')] bg-[length:620px_360px] bg-center opacity-45" />
+        <div className="absolute inset-0 bg-white/35" />
+        <div className="absolute inset-0 bg-[url('/relieve-topografico.svg')] bg-[length:620px_360px] bg-center opacity-30" />
       </div>
 
-      <div className="relative mx-auto flex min-h-[calc(100vh-7rem)] max-w-7xl flex-col items-center justify-center px-4 py-8 md:min-h-[calc(100vh-8rem)] md:px-6">
+      <div className="relative mx-auto flex min-h-[calc(100vh-5rem)] max-w-7xl flex-col items-center justify-center px-4 py-8 md:min-h-[calc(100vh-6rem)] md:px-6">
         <div className="sr-only">
           <h1>Ingeniero Agrimensor Gabriel Lucero</h1>
           <p>
@@ -68,7 +67,7 @@ export function Hero() {
             </div>
 
             <div className="mx-auto max-w-4xl text-center">
-              <p className="mx-auto mb-6 max-w-5xl rounded-md bg-slate-950/28 px-4 py-3 font-heading text-xl font-bold leading-snug text-white [text-shadow:0_3px_12px_rgba(0,0,0,0.95)] backdrop-blur-[2px] md:text-3xl">
+              <p className="mx-auto mb-6 max-w-5xl px-4 py-3 font-heading text-xl font-bold leading-snug text-slate-950 [text-shadow:0_2px_8px_rgba(255,255,255,0.95),0_1px_18px_rgba(255,255,255,0.75)] md:text-3xl">
                 Somos un estudio integral de agrimensura, topografía y consultoría en ingeniería,
                 con sólida experiencia en la provincia de Buenos Aires.
               </p>

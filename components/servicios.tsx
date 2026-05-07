@@ -44,28 +44,27 @@ const servicios = orden
 
 export function Servicios() {
   return (
-    <section id="servicios" className="relative overflow-hidden bg-slate-50 py-28">
-      <div className="absolute inset-0 bg-[url('/relieve-topografico.svg')] bg-[length:620px_360px] bg-center opacity-35" />
-      <div className="absolute inset-0 bg-white/55" />
-      <div className="relative mx-auto max-w-7xl px-4">
-        <div className="mb-18 text-center">
-          <h2 className="mb-5 text-5xl font-extrabold tracking-tight text-primary md:text-6xl">
+    <section id="servicios" className="relative overflow-hidden bg-white py-20">
+      <div className="absolute inset-0 bg-[url('/relieve-topografico.svg')] bg-[length:620px_360px] bg-center opacity-20" />
+      <div className="relative mx-auto max-w-6xl px-4">
+        <div className="mb-12 text-center">
+          <h2 className="mb-4 text-4xl font-extrabold tracking-tight text-primary md:text-5xl">
             Nuestros Servicios
           </h2>
-          <p className="mx-auto max-w-4xl text-xl font-medium leading-relaxed text-muted-foreground md:text-2xl">
+          <p className="mx-auto max-w-3xl text-lg font-medium leading-relaxed text-muted-foreground md:text-xl">
             Presupuestos y asesoramientos personalizados en La Plata y Provincia
             de Buenos Aires.
           </p>
         </div>
 
-        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {servicios.map((servicio) => {
             const Icon = iconos[servicio.slug]
 
             return (
               <Link key={servicio.slug} href={`/servicios/${servicio.slug}`}>
-                <Card className="group flex h-full min-h-[520px] cursor-pointer flex-col overflow-hidden border border-slate-200 shadow-md transition-all hover:-translate-y-1 hover:border-slate-400 hover:shadow-xl">
-                  <div className="relative h-48 overflow-hidden bg-primary">
+                <Card className="group flex h-full min-h-[390px] cursor-pointer flex-col overflow-hidden border border-slate-200 shadow-md transition-all hover:-translate-y-1 hover:border-slate-400 hover:shadow-xl">
+                  <div className="relative h-40 overflow-hidden bg-primary">
                     <Image
                       src={servicio.imagen}
                       alt={servicio.title}
@@ -84,13 +83,13 @@ export function Servicios() {
                   <CardHeader className="sr-only">
                     <CardTitle>{servicio.title}</CardTitle>
                   </CardHeader>
-                  <CardContent className="flex flex-1 flex-col pt-8">
-                    <CardDescription className="mb-6 line-clamp-5 text-base leading-relaxed text-muted-foreground md:text-lg">
+                  <CardContent className="flex flex-1 flex-col pt-6">
+                    <CardDescription className="mb-5 line-clamp-4 text-base leading-relaxed text-muted-foreground">
                       {servicio.description}
                     </CardDescription>
                     <Button
                       variant="ghost"
-                      className="mt-auto h-13 w-full text-lg font-extrabold transition-colors group-hover:bg-primary group-hover:text-white"
+                      className="mt-auto h-11 w-full text-base font-extrabold transition-colors group-hover:bg-primary group-hover:text-white"
                     >
                       Ver más <ArrowRight className="ml-2 h-5 w-5" />
                     </Button>

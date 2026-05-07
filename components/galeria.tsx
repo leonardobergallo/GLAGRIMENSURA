@@ -4,7 +4,6 @@ import { useCallback, useEffect, useMemo, useState } from "react"
 import Image from "next/image"
 import { ChevronLeft, ChevronRight } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
 
 const categorias = [
   { id: "todos", label: "Todos" },
@@ -68,7 +67,6 @@ const galeriaInicial: GalleryImage[] = [
 ]
 
 export function Galeria() {
-  const [categoriaActiva, setCategoriaActiva] = useState("todos")
   const [currentIndex, setCurrentIndex] = useState(0)
   const [isAutoPlaying, setIsAutoPlaying] = useState(true)
   const [galeria, setGaleria] = useState<GalleryImage[]>(galeriaInicial)
@@ -101,15 +99,11 @@ export function Galeria() {
     fetchGallery()
   }, [])
 
-  const imagenesFiltradas = useMemo(() => {
-    return categoriaActiva === "todos"
-      ? galeria
-      : galeria.filter((img) => img.categoria === categoriaActiva)
-  }, [categoriaActiva, galeria])
+  const imagenesFiltradas = useMemo(() => galeria, [galeria])
 
   useEffect(() => {
     setCurrentIndex(0)
-  }, [categoriaActiva])
+  }, [galeria])
 
   const nextSlide = useCallback(() => {
     if (imagenesFiltradas.length === 0) return
@@ -163,23 +157,6 @@ export function Galeria() {
           </p>
         </div>
 
-        <div className="mb-8 flex flex-wrap justify-center gap-3">
-          {categorias.map((cat) => (
-            <Button
-              key={cat.id}
-              variant={categoriaActiva === cat.id ? "default" : "outline"}
-              onClick={() => setCategoriaActiva(cat.id)}
-              className={`rounded-full px-5 py-4 text-sm font-bold transition-all ${
-                categoriaActiva === cat.id
-                  ? "border-amber-500 bg-amber-500 text-black hover:bg-amber-600"
-                  : "border-gray-600 bg-transparent text-gray-300 hover:border-amber-500 hover:text-amber-500"
-              }`}
-            >
-              {cat.label}
-            </Button>
-          ))}
-        </div>
-
         {imagenesFiltradas.length > 0 ? (
           <div
             className="relative"
@@ -205,7 +182,7 @@ export function Galeria() {
                 return (
                   <div
                     key={`${item.id}-${i}`}
-                    className={`relative overflow-hidden rounded-md transition-all duration-500 ${
+                    className={`relative overflow-hidden rounded-md bg-black transition-all duration-500 ${
                       isCenter
                         ? "h-[170px] w-full scale-100 opacity-100 shadow-2xl md:h-[240px] md:w-[430px] lg:h-[280px] lg:w-[520px]"
                         : "hidden h-[135px] w-[210px] scale-95 opacity-65 md:block lg:h-[160px] lg:w-[250px]"
@@ -215,7 +192,7 @@ export function Galeria() {
                       src={item.src || "/placeholder.svg"}
                       alt={item.alt}
                       fill
-                      className="object-cover"
+                      className="object-contain"
                       priority={isCenter}
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/15 to-transparent">

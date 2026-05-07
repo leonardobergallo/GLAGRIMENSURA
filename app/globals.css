@@ -160,7 +160,10 @@
   }
 }
 
-.site-brand-text,
+.site-brand-text {
+  display: none;
+}
+
 .site-desktop-nav {
   display: none;
 }
@@ -179,7 +182,9 @@
   .site-brand-text {
     display: block;
   }
+}
 
+@media (min-width: 1024px) {
   .site-desktop-nav {
     display: flex;
   }
