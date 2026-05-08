@@ -42,9 +42,9 @@ export default function RootLayout({
     <html lang="es">
       <Script
         src="https://www.googletagmanager.com/gtag/js?id=AW-17595273908"
-        strategy="beforeInteractive"
+        strategy="afterInteractive"
       />
-      <Script id="google-ads-tag" strategy="beforeInteractive">
+      <Script id="google-ads-tag" strategy="afterInteractive">
         {`
           window.dataLayer = window.dataLayer || [];
           function gtag(){dataLayer.push(arguments);}

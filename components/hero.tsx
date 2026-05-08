@@ -44,7 +44,7 @@ export function Hero() {
           </div>
 
           <div className="relative drop-shadow-[0_4px_14px_rgba(0,0,0,0.78)]">
-            <div className="mb-10 flex flex-col items-center justify-center gap-5 text-center sm:flex-row sm:gap-7">
+            <div className="mb-10 flex flex-row items-center justify-center gap-5 text-center sm:gap-7">
               <div className="relative h-24 w-24 rounded-md bg-white/95 shadow-2xl shadow-slate-950/35 ring-1 ring-white md:h-32 md:w-32">
                 <Image
                   src="/logoGeoSudFix.png"
@@ -68,8 +68,7 @@ export function Hero() {
 
             <div className="mx-auto max-w-4xl text-center">
               <p className="mx-auto mb-6 max-w-5xl px-4 py-3 font-heading text-xl font-bold leading-snug text-slate-950 [text-shadow:0_2px_8px_rgba(255,255,255,0.95),0_1px_18px_rgba(255,255,255,0.75)] md:text-3xl">
-                Somos un estudio integral de agrimensura, topografía y consultoría en ingeniería,
-                con sólida experiencia en la provincia de Buenos Aires.
+                Somos un estudio de agrimensura, topografía y consultoría en ingeniería, comprometido en brindar soluciones claras, precisas y confiables. Contamos con amplia experiencia en la provincia de Buenos Aires, acompañando a cada cliente con atención personalizada y profesionalismo en cada etapa del trabajo.
               </p>
             </div>
           </div>

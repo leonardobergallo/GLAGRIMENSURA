@@ -21,50 +21,7 @@ interface GalleryImage {
   etiqueta: string
 }
 
-const galeriaInicial: GalleryImage[] = [
-  {
-    id: 0,
-    src: "/sobre/agrimensura-ia.png",
-    alt: "Equipamiento profesional de agrimensura en campo",
-    categoria: "equipos",
-    etiqueta: "Agrimensura Profesional",
-  },
-  {
-    id: 1,
-    src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-BXUvlOJjjMNUJnbVcvt1pu7s4N4ivS.png",
-    alt: "Mensura urbana con teodolito - La Plata 2024",
-    categoria: "urbano",
-    etiqueta: "Mensura Urbana - La Plata 2024",
-  },
-  {
-    id: 2,
-    src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-EqYOI4D9jyhpfP45HDm8iYk9fVcvcF.png",
-    alt: "Trabajo de campo con estación total",
-    categoria: "gps",
-    etiqueta: "Relevamiento Topográfico 2024",
-  },
-  {
-    id: 3,
-    src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-IhW5FCzcgv6tLF2olSE9lrIElB95Vu.png",
-    alt: "GPS profesional en trabajo de campo",
-    categoria: "gps",
-    etiqueta: "GPS RTK - Precisión cm",
-  },
-  {
-    id: 4,
-    src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-T3eyRRELOHqFKa5krvdEIdCNDz41mx.png",
-    alt: "Mensura rural con GPS",
-    categoria: "rural",
-    etiqueta: "Mensura Rural 2024",
-  },
-  {
-    id: 5,
-    src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-0rrkL2idywkPXytSLjLb1ITR6DZqxH.png",
-    alt: "Estación total en medición topográfica",
-    categoria: "equipos",
-    etiqueta: "Estación Total Profesional",
-  },
-]
+const galeriaInicial: GalleryImage[] = []
 
 export function Galeria() {
   const [currentIndex, setCurrentIndex] = useState(0)
