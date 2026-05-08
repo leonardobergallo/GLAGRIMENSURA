@@ -1,6 +1,7 @@
 import type React from "react"
 import type { Metadata } from "next"
 import { Montserrat, Poppins } from "next/font/google"
+import Script from "next/script"
 import { Analytics } from "@vercel/analytics/next"
 import { WhatsAppFloat } from "@/components/whatsapp-float"
 import "./globals.css"
@@ -39,6 +40,18 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="es">
+      <Script
+        src="https://www.googletagmanager.com/gtag/js?id=AW-17595273908"
+        strategy="beforeInteractive"
+      />
+      <Script id="google-ads-tag" strategy="beforeInteractive">
+        {`
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'AW-17595273908');
+        `}
+      </Script>
       <body className={`${poppins.variable} ${montserrat.variable} font-sans antialiased`}>
         {children}
         <WhatsAppFloat />
